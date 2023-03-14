@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "hardware/timer.h"
 
-int main(void)
-{  
+#include "gpio.h"
+
+util::GPIO led(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+util::GPIO button(16, GPIO_IN, true, false);
+
+int main() {
+
     stdio_init_all();
-    printf("\n\nHello World\n");
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-    while (true)
-    {
-        gpio_put(PICO_DEFAULT_LED_PIN, 1);
+
+    while (true) {
+        printf("Hi\n");
         sleep_ms(100);
-        gpio_put(PICO_DEFAULT_LED_PIN, 0);
-        sleep_ms(100);
+        led = bool(button);
     }
 }
