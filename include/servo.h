@@ -23,5 +23,8 @@ namespace util {
         // Stop sending a signal to the servo
         // Note this means the servo will no longer hold its position!
         void stop();
+
+        // Same as set_angle
+        uint operator=(uint angle);
     };
 }

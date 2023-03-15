@@ -8,8 +8,8 @@ namespace util {
     class A4988 {
     private:
         const uint clk;
+        const uint slice, channel;
         GPIO dir_pin;
-        uint slice, channel;
         uint duty_cycle = 0;
 
         static A4988 *instances[8];

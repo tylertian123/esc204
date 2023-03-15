@@ -20,9 +20,8 @@ namespace util {
 
     A4988 *A4988::instances[8] = {nullptr};
 
-    A4988::A4988(uint clk, uint dir, uint32_t freq, uint8_t duty) : clk(clk), dir_pin(dir, GPIO_OUT) {
-        slice = pwm_gpio_to_slice_num(clk);
-        channel = pwm_gpio_to_channel(clk);
+    A4988::A4988(uint clk, uint dir, uint32_t freq, uint8_t duty)
+        : clk(clk), slice(pwm_gpio_to_slice_num(clk)), channel(pwm_gpio_to_channel(clk)), dir_pin(dir, GPIO_OUT) {
         gpio_set_function(clk, GPIO_FUNC_PWM);
 
         // Default sys clk is 125MHz; this makes the counter go up once every microsecond

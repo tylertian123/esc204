@@ -4,7 +4,7 @@
 
 namespace util {
     Servo::Servo(uint pin, uint16_t period_us, uint16_t min_width_us, uint16_t max_width_us, uint range)
-        : slice(pwm_gpio_to_slice_num(pin)), channel(pwm_gpio_to_channel(pin)), pin(pin), min_width(min_width_us), max_width(max_width_us), range(range) {
+        : pin(pin), slice(pwm_gpio_to_slice_num(pin)), channel(pwm_gpio_to_channel(pin)), min_width(min_width_us), max_width(max_width_us), range(range) {
         gpio_set_function(pin, GPIO_FUNC_PWM);
         
         // Default sys clk is 125MHz; this makes the counter go up once every microsecond
@@ -28,5 +28,10 @@ namespace util {
 
     void Servo::stop() {
         pwm_set_chan_level(slice, channel, 0);
+    }
+
+    uint Servo::operator=(uint angle) {
+        set_angle(angle);
+        return angle;
     }
 }
