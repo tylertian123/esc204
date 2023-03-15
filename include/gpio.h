@@ -1,14 +1,17 @@
 #pragma once
 
+#include <limits.h>
 #include "pico/stdlib.h"
 
 namespace util {
     class GPIO {
     private:
-        const uint pin;
-        bool out_mode;
+        uint pin = UINT_MAX;
     
     public:
+        // Leave everything uninitialized
+        // reinit() MUST be called prior to doing anything
+        GPIO();
         // pin is the GPIO pin number
         // out is the pin mode; set to true (or equivalently GPIO_OUT) for output pins, false or GPIO_IN for input pins
         GPIO(uint pin, bool out);
@@ -19,6 +22,9 @@ namespace util {
 
         // Reinitialize the GPIO pin in a new direction
         void reinit(bool out);
+        // Reinitialize this object to use a different GPIO pin, in a new direction
+        // Note if this pin was previously initialized, the old pin is not reset!
+        void reinit(uint pin, bool out);
         // Attach the interval pull up/down
         void set_pull(bool up, bool down);
 

@@ -26,6 +26,8 @@ namespace util {
 
         // Move num steps in the specified direction, asynchronously
         void step(uint num, bool direction);
+        // Move num steps, forward if num > 0, backward if num < 0
+        void step(int num);
         // Stop the movement completely
         void stop();
         // Return whether the stepper is done moving the specified number of steps

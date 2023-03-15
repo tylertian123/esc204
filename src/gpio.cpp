@@ -2,8 +2,10 @@
 #include "gpio.h"
 
 namespace util {
-    GPIO::GPIO(uint pin, bool out) : pin(pin), out_mode(out) {
-        reinit(out);
+    GPIO::GPIO() {}
+
+    GPIO::GPIO(uint pin, bool out) : pin(pin) {
+        reinit(pin, out);
     }
 
     GPIO::GPIO(uint pin, bool out, bool pull_up, bool pull_down) : pin(pin) {
@@ -11,10 +13,14 @@ namespace util {
         set_pull(pull_up, pull_down);
     }
 
-    void GPIO::reinit(bool out) {
-        out_mode = out;
+    void GPIO::reinit(uint pin, bool out) {
+        this->pin = pin;
         gpio_init(pin);
         gpio_set_dir(pin, out);
+    }
+
+    void GPIO::reinit(bool out) {
+        reinit(pin, out);
     }
 
     void GPIO::set_pull(bool up, bool down) {

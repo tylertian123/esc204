@@ -69,6 +69,11 @@ namespace util {
         }
     }
 
+    void A4988::step(int num) {
+        if (num)
+            step(num > 0 ? num : -num, num > 0);
+    }
+
     void A4988::stop() {
         pwm_set_chan_level(slice, channel, 0);
     }
