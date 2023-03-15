@@ -11,6 +11,11 @@ namespace util {
         const uint slice, channel;
         GPIO dir_pin;
         uint duty_cycle = 0;
+        bool direction = 0;
+
+        // Uninitialized by default
+        GPIO lower_lim_sw, upper_lim_sw;
+        bool has_lower_lim = false, has_upper_lim = false;
 
         static A4988 *instances[8];
     
@@ -24,9 +29,14 @@ namespace util {
         static void pwm_wrap_cb_global(uint slice);
         void pwm_wrap_cb();
 
+        // Add limit switches; these MUST be active-low
+        void add_lower_lim_sw(uint pin);
+        void add_upper_lim_sw(uint pin);
         // Move num steps in the specified direction, asynchronously
+        // If num == UINT_MAX, step indefinitely (until limit switch hits)
         void step(uint num, bool direction);
         // Move num steps, forward if num > 0, backward if num < 0
+        // If num == INT_MAX or INT_MIN, step indefinitely (until limit switch hits)
         void step(int num);
         // Stop the movement completely
         void stop();

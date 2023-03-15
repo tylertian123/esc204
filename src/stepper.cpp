@@ -3,7 +3,7 @@
 #include "hardware/irq.h"
 #include "hardware/pwm.h"
 
-#include <stdio.h>
+#include <limits.h>
 
 namespace util {
     
@@ -53,28 +53,48 @@ namespace util {
 
     void A4988::pwm_wrap_cb() {
         if (steps_left > 0) {
-            steps_left --;
-            if (!steps_left) {
+            if (steps_left != UINT_MAX)
+                steps_left --;
+            if (!steps_left || (has_upper_lim && direction && !upper_lim_sw) || (has_lower_lim && !direction && !lower_lim_sw)) {
+                steps_left = 0;
                 // Setting to a duty cycle of 0 will disable PWM
                 pwm_set_chan_level(slice, channel, 0);
             }
         }
     }
 
+    void A4988::add_lower_lim_sw(uint pin) {
+        lower_lim_sw.reinit(pin, GPIO_IN);
+        lower_lim_sw.set_pull(true, false);
+        has_lower_lim = true;
+    }
+
+    void A4988::add_upper_lim_sw(uint pin) {
+        upper_lim_sw.reinit(pin, GPIO_IN);
+        upper_lim_sw.set_pull(true, false);
+        has_upper_lim = true;
+    }
+
     void A4988::step(uint num, bool direction) {
         if (num) {
             steps_left = num;
+            this->direction = direction;
             dir_pin = direction;
             pwm_set_chan_level(slice, channel, duty_cycle);
         }
     }
 
     void A4988::step(int num) {
-        if (num)
+        if (num == INT_MAX)
+            step(UINT_MAX, true);
+        else if (num == INT_MIN)
+            step(UINT_MAX, false);
+        else
             step(num > 0 ? num : -num, num > 0);
     }
 
     void A4988::stop() {
+        steps_left = 0;
         pwm_set_chan_level(slice, channel, 0);
     }
 
