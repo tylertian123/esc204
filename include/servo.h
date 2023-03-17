@@ -2,7 +2,7 @@
 
 #include "pico/stdlib.h"
 
-namespace util {
+namespace hw {
     class Servo {
     private:
         const uint pin;

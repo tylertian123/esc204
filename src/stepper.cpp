@@ -5,7 +5,7 @@
 
 #include <limits.h>
 
-namespace util {
+namespace hw {
     
     void pwm_wrap_handler() {
         uint32_t irq_status = pwm_get_irq_status_mask();

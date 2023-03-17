@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 #include "gpio.h"
 
-namespace util {
+namespace hw {
     GPIO::GPIO() {}
 
     GPIO::GPIO(uint pin, bool out) : pin(pin) {

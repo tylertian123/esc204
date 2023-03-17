@@ -2,7 +2,7 @@
 
 #include "hardware/pwm.h"
 
-namespace util {
+namespace hw {
     Servo::Servo(uint pin, uint16_t period_us, uint16_t min_width_us, uint16_t max_width_us, uint range)
         : pin(pin), slice(pwm_gpio_to_slice_num(pin)), channel(pwm_gpio_to_channel(pin)), min_width(min_width_us), max_width(max_width_us), range(range) {
         gpio_set_function(pin, GPIO_FUNC_PWM);

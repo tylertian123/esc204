@@ -4,7 +4,7 @@
 
 #include "gpio.h"
 
-namespace util {
+namespace hw {
     class A4988 {
     private:
         const uint clk;

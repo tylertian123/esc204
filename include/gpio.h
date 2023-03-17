@@ -3,7 +3,7 @@
 #include <limits.h>
 #include "pico/stdlib.h"
 
-namespace util {
+namespace hw {
     class GPIO {
     private:
         uint pin = UINT_MAX;
