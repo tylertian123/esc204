@@ -5,9 +5,9 @@
 
 namespace subsys {
     ZMovement::ZMovement()
-        : left_stepper(pinmap::z_left_clk, pinmap::z_left_dir, hwconf::z_left_freq, hwconf::z_left_duty) {
-        left_stepper.add_lower_lim_sw(pinmap::z_lower_lim);
-        left_stepper.add_upper_lim_sw(pinmap::z_upper_lim);
+        : left_stepper(pinmap::z1_clk, pinmap::z1_dir, hwconf::z_left_freq, hwconf::z_left_duty) {
+        left_stepper.add_lower_lim_sw(pinmap::z1_lower_lim);
+        left_stepper.add_upper_lim_sw(pinmap::z1_upper_lim);
     }
 
     bool ZMovement::busy() {
