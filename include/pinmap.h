@@ -2,7 +2,7 @@
 
 #include "pico/stdlib.h"
 
-// Namespace containing GPIO pin numbers of hardware components
+/// @brief Namespace containing GPIO pin numbers of hardware components
 namespace pinmap {
     constexpr uint z1_clk = 2,
                    z1_dir = 3,
@@ -31,7 +31,7 @@ namespace pinmap {
                    
 }
 
-// Namespace containing configuration properties of hardware components
+/// @brief Namespace containing configuration properties of hardware components
 namespace hwconf {
     constexpr uint z_left_freq = 1000;
     constexpr uint8_t z_left_duty = 240;

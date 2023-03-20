@@ -9,28 +9,37 @@ namespace hw {
         uint pin = UINT_MAX;
     
     public:
-        // Leave everything uninitialized
-        // reinit() MUST be called prior to doing anything
+        /// @brief Default constructor, leaves the pin uninitialized.
+        /// reinit() MUST be called prior to using the pin.
         GPIO();
-        // pin is the GPIO pin number
-        // out is the pin mode; set to true (or equivalently GPIO_OUT) for output pins, false or GPIO_IN for input pins
+        /// @brief Constructor.
+        /// @param pin GPIO pin number
+        /// @param out Pin mode; set to true (or equivalently GPIO_OUT) for output pins, false or GPIO_IN for input pins
         GPIO(uint pin, bool out);
-        // pin is the GPIO pin number
-        // out is the pin mode; set to true (or equivalently GPIO_OUT) for output pins, false or GPIO_IN for input pins
-        // Set pull_up or pull_down to true to attach the internal pull up/down
+        /// @brief Constructor that also sets the internal pull-up/down.
+        /// @param pin GPIO pin number.
+        /// @param out Pin mode; set to true (or equivalently GPIO_OUT) for output pins, false or GPIO_IN for input pins
+        /// @param pull_up If true, sets the interval pull-up
+        /// @param pull_down If true, sets the internal pull-down
         GPIO(uint pin, bool out, bool pull_up, bool pull_down);
 
-        // Reinitialize the GPIO pin in a new direction
+        /// @brief Reinitialize the GPIO pin in a new direction
         void reinit(bool out);
-        // Reinitialize this object to use a different GPIO pin, in a new direction
-        // Note if this pin was previously initialized, the old pin is not reset!
+        /// @brief Reinitialize this object to use a different GPIO pin, in a new direction
+        /// Note if this pin was previously initialized, the old pin is not reset!
+        /// @param pin GPIO pin number
+        /// @param out Pin mode
         void reinit(uint pin, bool out);
-        // Attach the interval pull up/down
+        /// @brief Attach the internal pull-up/down.
+        /// @param up If true, attaches the internal pull-up
+        /// @param down If true, attaches the internal pull-down
         void set_pull(bool up, bool down);
 
-        // Set the output on the pin
+        /// @brief Set the output logic level on the pin.
+        /// @param val The output to set
+        /// @return The output value
         bool operator=(bool val);
-        // Get the input value on the pin
+        /// @brief Get the reading on the GPIO pin.
         operator bool() const;
     };
 }
