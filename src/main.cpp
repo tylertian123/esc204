@@ -21,12 +21,19 @@ int main() {
     ui::init();
 
     ui::led.blink(200, hw::LED::INDEFINITE);
+    ui::disp.print("Calibrating...");
 
     // Calibration procedure
+    ui::disp.goto_pos(0, 1);
+    ui::disp.print("Z axis");
     z_axis.calibrate_blocking();
+    ui::disp.goto_pos(0, 1);
+    ui::disp.print("X axis");
     x_axis.calibrate_blocking();
 
     ui::led = true;
+    ui::disp.clear();
+    ui::disp.print("System Idle");
     while (true) {
         tight_loop_contents();
     }
