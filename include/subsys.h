@@ -14,7 +14,11 @@ namespace subsys {
         enum Position : uint8_t {
             /// @brief Unknown position. This occurs after reset and before calibration.
             UNKNOWN = 0,
+            /// @brief Calibration position. This is all the way down.
+            CALIBRATION,
+            /// @brief Gripper raised.
             TOP,
+            /// @brief Gripper lowered.
             BOTTOM
         };
 

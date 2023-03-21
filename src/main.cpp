@@ -25,11 +25,12 @@ int main() {
 
     // Calibration procedure
     ui::disp.goto_pos(0, 1);
-    ui::disp.print("Z axis");
-    z_axis.calibrate_blocking();
-    ui::disp.goto_pos(0, 1);
     ui::disp.print("X axis");
     x_axis.calibrate_blocking();
+    ui::disp.goto_pos(0, 1);
+    ui::disp.print("Z axis");
+    z_axis.calibrate_blocking();
+    z_axis.set_position(subsys::ZMovement::TOP);
 
     ui::led = true;
     ui::disp.clear();

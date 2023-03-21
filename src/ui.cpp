@@ -4,6 +4,7 @@
 
 #include "pico/stdlib.h"
 #include "pico/time.h"
+#include "pi-pico-LCD/lcd_display.hpp"
 
 namespace ui {
     hw::Button b_left(pinmap::left), b_right(pinmap::right), b_center(pinmap::center);
