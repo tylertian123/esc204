@@ -21,8 +21,7 @@ namespace pinmap {
                    lcd_d5 = 11,
                    lcd_d4 = 12,
                    lcd_en = 13,
-                   lcd_rw = 14,
-                   lcd_rs = 15;
+                   lcd_rs = 14;
     constexpr uint left = 18,
                    right = 17,
                    center = 16;
