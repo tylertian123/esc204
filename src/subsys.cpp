@@ -5,13 +5,16 @@
 
 namespace subsys {
     ZMovement::ZMovement()
-        : left_stepper(pinmap::z1_clk, pinmap::z1_dir, hwconf::z_left_freq, hwconf::z_left_duty) {
+        : left_stepper(pinmap::z1_clk, pinmap::z1_dir, hwconf::z1_freq, hwconf::z2_duty),
+          right_stepper(pinmap::z2_clk, pinmap::z2_dir, hwconf::z2_freq, hwconf::z2_duty) {
         left_stepper.add_lower_lim_sw(pinmap::z1_lower_lim);
         left_stepper.add_upper_lim_sw(pinmap::z1_upper_lim);
+        right_stepper.add_lower_lim_sw(pinmap::z2_lower_lim);
+        right_stepper.add_upper_lim_sw(pinmap::z2_upper_lim);
     }
 
     bool ZMovement::busy() {
-        return !left_stepper.done();
+        return !left_stepper.done() || !right_stepper.done();
     }
 
     ZMovement::Position ZMovement::get_position() {
@@ -21,7 +24,56 @@ namespace subsys {
     void ZMovement::set_position(Position pos) {
         if (pos != UNKNOWN) {
             left_stepper.step(pos == TOP ? INT_MAX : INT_MIN);
+            right_stepper.step(pos == TOP ? INT_MAX : INT_MIN);
             position = pos;
         }
+    }
+
+    void ZMovement::calibrate_blocking() {
+        set_position(TOP);
+        while (busy())
+            tight_loop_contents();
+    }
+
+    XMovement::XMovement()
+        : stepper(pinmap::x_clk, pinmap::x_dir, hwconf::x_freq, hwconf::x_duty) {
+        stepper.add_lower_lim_sw(pinmap::x_lower_lim);
+    }
+
+    bool XMovement::busy() {
+        return !stepper.done();
+    }
+
+    double XMovement::get_position() {
+        return position;
+    }
+
+    double XMovement::set_position(double pos) {
+        // Find how many steps is required and round to the nearest whole step
+        long steps = round((pos - position) / hwconf::x_mm_per_step);
+        position += steps * hwconf::x_mm_per_step;
+        stepper.step(steps);
+        return position;
+    }
+
+    void XMovement::calibrate_blocking() {
+        stepper.step(INT_MIN);
+        while (busy())
+            tight_loop_contents();
+        position = 0;
+    }
+
+    Gripper::Gripper()
+        : servo(pinmap::gripper, hwconf::gripper_period, hwconf::gripper_min_pulse, hwconf::gripper_max_pulse, hwconf::gripper_range) {
+        set(OPEN);
+    }
+
+    void Gripper::set(Gripper::State state) {
+        servo = state ? hwconf::gripper_open : hwconf::gripper_closed;
+    }
+
+    Gripper::State Gripper::operator=(Gripper::State state) {
+        set(state);
+        return state;
     }
 }
