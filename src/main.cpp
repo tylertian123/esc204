@@ -24,6 +24,8 @@ bool sys_status_led_cb(repeating_timer_t *rt) {
 }
 
 subsys::ZMovement z_axis;
+subsys::XMovement x_axis;
+subsys::Gripper gripper;
 
 int main() {
 
@@ -36,9 +38,8 @@ int main() {
     add_repeating_timer_ms(100, &sys_status_led_cb, nullptr, &sys_status_timer);
 
     // Calibration procedure
-    z_axis.set_position(subsys::ZMovement::TOP);
-    while (z_axis.busy())
-        tight_loop_contents();
+    z_axis.calibrate_blocking();
+    x_axis.calibrate_blocking();
 
     sys_status = SystemStatus::NORMAL;
     sleep_ms(100);

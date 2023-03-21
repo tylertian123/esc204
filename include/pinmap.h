@@ -33,6 +33,21 @@ namespace pinmap {
 
 /// @brief Namespace containing configuration properties of hardware components
 namespace hwconf {
-    constexpr uint z_left_freq = 1000;
-    constexpr uint8_t z_left_duty = 240;
+    constexpr uint z1_freq = 1000;
+    constexpr uint8_t z1_duty = 240;
+    constexpr uint z2_freq = 1000;
+    constexpr uint8_t z2_duty = 240;
+    constexpr uint x_freq = 200;
+    constexpr uint8_t x_duty = 70;
+
+    // TODO: Change me!
+    constexpr double x_mm_per_step = 0.5;
+
+    constexpr uint16_t gripper_period = 20000,
+                       gripper_min_pulse = 500,
+                       gripper_max_pulse = 2500;
+    // TODO: Change me!
+    constexpr uint gripper_range = 180,
+                   gripper_open = 0,
+                   gripper_closed = 90;
 }
