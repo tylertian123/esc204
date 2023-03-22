@@ -1,3 +1,10 @@
+/**
+ * pi-pico-LCD library, by @martinkooij
+ * https://github.com/martinkooij/pi-pico-LCD
+ * 
+ * Symlinked to src/ to fix a compile issue.
+ */
+
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
 #include "pico/time.h"
