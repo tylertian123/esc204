@@ -20,8 +20,8 @@ namespace hw {
 
     A4988 *A4988::instances[8] = {nullptr};
 
-    A4988::A4988(uint clk, uint dir, uint32_t freq, uint8_t duty)
-        : clk(clk), slice(pwm_gpio_to_slice_num(clk)), channel(pwm_gpio_to_channel(clk)), dir_pin(dir, GPIO_OUT) {
+    A4988::A4988(uint clk, uint dir, uint32_t freq, uint8_t duty, bool invert)
+        : clk(clk), slice(pwm_gpio_to_slice_num(clk)), channel(pwm_gpio_to_channel(clk)), dir_pin(dir, GPIO_OUT), inverted(invert) {
         gpio_set_function(clk, GPIO_FUNC_PWM);
 
         // Default sys clk is 125MHz; this makes the counter go up once every microsecond
@@ -43,6 +43,8 @@ namespace hw {
         instances[slice] = this;
         pwm_set_enabled(slice, true);
     }
+
+    A4988::A4988(uint clk, uint dir, uint32_t freq, uint8_t duty) : A4988(clk, dir, freq, duty, false) {}
 
     void A4988::pwm_wrap_cb_global(uint slice) {
         // Call the instance-specific callback function
@@ -75,11 +77,12 @@ namespace hw {
         has_upper_lim = true;
     }
 
-    void A4988::step(uint num, bool direction) {
+    void A4988::step(uint num, bool dir) {
         if (num) {
             steps_left = num;
-            this->direction = direction;
-            dir_pin = direction;
+            direction = dir;
+            // If inverted is true, invert the output on the direction pin
+            dir_pin = inverted ? !direction : direction;
             pwm_set_chan_level(slice, channel, duty_cycle);
         }
     }
@@ -98,7 +101,7 @@ namespace hw {
         pwm_set_chan_level(slice, channel, 0);
     }
 
-    bool A4988::done() {
+    bool A4988::done() const {
         return !steps_left;
     }
 }

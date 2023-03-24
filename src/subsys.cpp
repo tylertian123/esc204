@@ -5,8 +5,8 @@
 
 namespace subsys {
     ZMovement::ZMovement()
-        : left_stepper(pinmap::z1_clk, pinmap::z1_dir, hwconf::z1_freq, hwconf::z2_duty),
-          right_stepper(pinmap::z2_clk, pinmap::z2_dir, hwconf::z2_freq, hwconf::z2_duty) {
+        : left_stepper(pinmap::z1_clk, pinmap::z1_dir, hwconf::z1_freq, hwconf::z2_duty, hwconf::z1_inverted),
+          right_stepper(pinmap::z2_clk, pinmap::z2_dir, hwconf::z2_freq, hwconf::z2_duty, hwconf::z2_inverted) {
         left_stepper.add_lower_lim_sw(pinmap::z1_lower_lim);
         right_stepper.add_lower_lim_sw(pinmap::z2_lower_lim);
     }
@@ -49,7 +49,7 @@ namespace subsys {
     }
 
     XMovement::XMovement()
-        : stepper(pinmap::x_clk, pinmap::x_dir, hwconf::x_freq, hwconf::x_duty) {
+        : stepper(pinmap::x_clk, pinmap::x_dir, hwconf::x_freq, hwconf::x_duty, hwconf::x_inverted) {
         stepper.add_lower_lim_sw(pinmap::x_lower_lim);
     }
 

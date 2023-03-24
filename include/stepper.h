@@ -10,8 +10,10 @@ namespace hw {
         const uint clk;
         const uint slice, channel;
         GPIO dir_pin;
-        uint duty_cycle = 0;
-        bool direction = 0;
+        uint16_t duty_cycle = 0;
+        bool direction = false;
+        bool inverted = false;
+        uint steps_left = 0;
 
         // Uninitialized by default
         GPIO lower_lim_sw, upper_lim_sw;
@@ -20,7 +22,6 @@ namespace hw {
         static A4988 *instances[8];
     
     public:
-        uint steps_left = 0;
         // clk and dir are the pin numbers for clock and direction inputs
         // Frequency is in Hz (this cannot be too low or too high)
         // Duty is the duty cycle of the signal (out of 65535)
@@ -31,6 +32,13 @@ namespace hw {
         /// @param freq Frequency of pulses in Hz
         /// @param duty Duty cycle (proportion of clock output that is high), out of 255
         A4988(uint clk, uint dir, uint32_t freq, uint8_t duty);
+        /// @brief Constructor.
+        /// @param clk Clock pin number
+        /// @param dir Direction pin number
+        /// @param freq Frequency of pulses in Hz
+        /// @param duty Duty cycle (proportion of clock output that is high), out of 255
+        /// @param invert Whether to invert the direction of the stepper
+        A4988(uint clk, uint dir, uint32_t freq, uint8_t duty, bool invert);
         
         static void pwm_wrap_cb_global(uint slice);
         void pwm_wrap_cb();
@@ -59,6 +67,6 @@ namespace hw {
         void stop();
         /// @brief Return whether the stepper is done moving the specified number of steps
         /// @return True if the stepper is idle.
-        bool done();
+        bool done() const;
     };
 }
