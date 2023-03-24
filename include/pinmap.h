@@ -45,8 +45,8 @@ namespace hwconf {
     /// @brief Amount of vertical travel (mm) per step in the z axis.
     constexpr double z_mm_per_step = 8.0 / 200.0;
     // Whether to invert the directions of the axes
-    constexpr bool z1_inverted = false,
-                   z2_inverted = false,
+    constexpr bool z1_inverted = true,
+                   z2_inverted = true,
                    x_inverted = false;
     // TODO: Change me!
     /// @brief Distance (mm) from calibration of the lowered/raised z position.

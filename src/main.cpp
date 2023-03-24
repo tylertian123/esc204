@@ -31,6 +31,8 @@ int main() {
     ui::disp.print("Z axis");
     z_axis.calibrate_blocking();
     z_axis.set_position(subsys::ZMovement::TOP);
+    while (z_axis.busy())
+        tight_loop_contents();
 
     ui::led = true;
     ui::disp.clear();

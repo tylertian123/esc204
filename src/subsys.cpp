@@ -24,10 +24,20 @@ namespace subsys {
             steps = INT_MIN;
             break;
         case TOP:
-            steps = hwconf::z_upper_pos_steps;
+            if (position == BOTTOM) {
+                steps = hwconf::z_upper_pos_steps - hwconf::z_lower_pos_steps;
+            }
+            else if (position == CALIBRATION) {
+                steps = hwconf::z_upper_pos_steps;
+            }
             break;
         case BOTTOM:
-            steps = hwconf::z_lower_pos_steps;
+            if (position == TOP) {
+                steps = hwconf::z_lower_pos_steps - hwconf::z_upper_pos_steps;
+            }
+            else if (position == CALIBRATION) {
+                steps = hwconf::z_lower_pos_steps;
+            }
             break;
         case UNKNOWN:
         default:
