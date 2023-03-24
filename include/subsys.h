@@ -3,6 +3,7 @@
 #include <math.h>
 #include "pico/stdlib.h"
 
+#include "pinmap.h"
 #include "stepper.h"
 #include "servo.h"
 
@@ -23,8 +24,8 @@ namespace subsys {
         };
 
     private:
-        hw::A4988 left_stepper;
-        hw::A4988 right_stepper;
+        hw::A4988 left_stepper{pinmap::z1_clk, pinmap::z1_dir, hwconf::z1_freq, hwconf::z2_duty, hwconf::z1_inverted};
+        hw::A4988 right_stepper{pinmap::z2_clk, pinmap::z2_dir, hwconf::z2_freq, hwconf::z2_duty, hwconf::z2_inverted};
         Position position = UNKNOWN;
 
     public:
@@ -45,7 +46,7 @@ namespace subsys {
 
     class XMovement {
     private:
-        hw::A4988 stepper;
+        hw::A4988 stepper{pinmap::x_clk, pinmap::x_dir, hwconf::x_freq, hwconf::x_duty, hwconf::x_inverted};
         double position = NAN;
     
     public:
@@ -68,7 +69,7 @@ namespace subsys {
 
     class Gripper {
     private:
-        hw::Servo servo;
+        hw::Servo servo{pinmap::gripper, hwconf::gripper_period, hwconf::gripper_min_pulse, hwconf::gripper_max_pulse, hwconf::gripper_range};
     
     public:
         /// @brief Enum for the state of the gripper.
