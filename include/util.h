@@ -8,5 +8,5 @@ namespace util {
     uint32_t millis();
     /// @brief Get the number of microseconds since boot
     /// @return The number of microseconds since boot
-    uint32_t micros();
+    uint64_t micros();
 }

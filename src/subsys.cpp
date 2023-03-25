@@ -1,7 +1,10 @@
 #include "subsys.h"
 
+#include <stdio.h>
+
 #include "pinmap.h"
 #include "stepper.h"
+#include "util.h"
 
 namespace subsys {
     ZMovement::ZMovement() {
@@ -9,11 +12,11 @@ namespace subsys {
         right_stepper.add_lower_lim_sw(pinmap::z2_lower_lim);
     }
 
-    bool ZMovement::busy() {
+    bool ZMovement::busy() const {
         return !left_stepper.done() || !right_stepper.done();
     }
 
-    ZMovement::Position ZMovement::get_position() {
+    ZMovement::Position ZMovement::get_position() const {
         return position;
     }
 
@@ -60,11 +63,11 @@ namespace subsys {
         stepper.add_lower_lim_sw(pinmap::x_lower_lim);
     }
 
-    bool XMovement::busy() {
+    bool XMovement::busy() const {
         return !stepper.done();
     }
 
-    double XMovement::get_position() {
+    double XMovement::get_position() const {
         return position;
     }
 
@@ -89,10 +92,46 @@ namespace subsys {
 
     void Gripper::set(Gripper::State state) {
         servo = state ? hwconf::gripper_open : hwconf::gripper_closed;
+        busy_until = util::millis() + hwconf::gripper_change_duration;
     }
 
     Gripper::State Gripper::operator=(Gripper::State state) {
         set(state);
         return state;
+    }
+
+    bool Gripper::busy(uint32_t t) const {
+        return t ? t > busy_until : util::millis() > busy_until;
+    }
+
+    void Control::run_once() {
+        uint32_t time = util::millis();
+        // Don't do anything if motors are currently moving
+        if (z_axis.busy() || x_axis.busy() || gripper.busy(time)) {
+            return;
+        }
+
+        // Main state machine logic
+        switch (state) {
+        case MOVE_SLIDE:
+        case PICK_SLIDE:
+        case IDLE:
+            // TODO
+        case WAIT:
+            // Wait until current slide is done
+            if (!current_slide || !current_slide->done(time))
+                break;
+            // Move to the next stage
+            current_slide->move_to_next();
+            // Enter move state to transfer the slide
+            // Start substate at GRIPPER_CLOSE since gripper is already closed
+            state = MOVE_SLIDE;
+            substate = GRIPPER_CLOSE;
+            break;
+        case CALIBRATION:
+            // TODO
+        default:
+            break;
+        }
     }
 }

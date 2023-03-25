@@ -70,4 +70,7 @@ namespace hwconf {
     constexpr uint gripper_range = 180,
                    gripper_open = 0,
                    gripper_closed = 90;
+    // TODO: Change me!
+    /// @brief The amount of time (ms) the gripper takes to open or close.
+    constexpr uint32_t gripper_change_duration = 1000;
 }

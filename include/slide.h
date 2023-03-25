@@ -37,6 +37,15 @@ public:
     /// @return True if move was successful (slot was empty)
     bool move(Stage new_stage, uint new_slot);
 
+    /// @brief Return whether the slide is done the current stage.
+    /// @param t System time in ms; if 0, will be recomputed
+    /// @return True if the slide should move to the next stage
+    bool done(uint32_t t = 0) const;
+
+    /// @brief Change the position of this slide to the first open slot in the next stage.
+    /// @return True if move was successful
+    bool move_to_next();
+
     static constexpr uint STAGE_COUNT = Stage::READY + 1;
     /// @brief The length of each stage, in milliseconds.
     static constexpr uint32_t STAGE_LEN[STAGE_COUNT] = {

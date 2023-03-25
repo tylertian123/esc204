@@ -33,3 +33,17 @@ int Slide::find_empty_slot(Slide::Stage stage) {
     }
     return -1;
 }
+
+bool Slide::done(uint32_t t) const {
+    t = t ? t : util::millis();
+    return t - stage_started > STAGE_LEN[stage];
+}
+
+bool Slide::move_to_next() {
+    if (stage == READY)
+        return false;
+    int new_slot = find_empty_slot(static_cast<Slide::Stage>(stage + 1));
+    if (new_slot == -1)
+        return false;
+    return move(static_cast<Slide::Stage>(stage + 1), new_slot);
+}
