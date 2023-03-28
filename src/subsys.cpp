@@ -113,22 +113,42 @@ namespace subsys {
 
         // Main state machine logic
         switch (state) {
-        case MOVE_SLIDE:
-        case PICK_SLIDE:
-        case IDLE:
-            // TODO
-        case WAIT:
-            // Wait until current slide is done
-            if (!current_slide || !current_slide->done(time))
+        case State::MOVE_SLIDE:
+            switch (substate) {
+            case Substate::X_MOVE_1:
+            case Substate::X_MOVE_2:
+                x_axis.set_position(current_slide->get_slot_position());
                 break;
-            // Move to the next stage
-            current_slide->move_to_next();
-            // Enter move state to transfer the slide
-            // Start substate at GRIPPER_CLOSE since gripper is already closed
-            state = MOVE_SLIDE;
-            substate = GRIPPER_CLOSE;
+            case Substate::Z_DOWN_1:
+            case Substate::Z_DOWN_2:
+                z_axis.set_position(ZMovement::BOTTOM);
+                break;
+            case Substate::GRIPPER_OPEN:
+                gripper = Gripper::OPEN;
+                // Reset the slide timer once the slide is dropped off
+                current_slide->reset_timer(time);
+                break;
+            case Substate::GRIPPER_CLOSE:
+                gripper = Gripper::CLOSED;
+                // Change current_slide, so that the new slot position is correct
+                current_slide->move_to_next();
+                break;
+            case Substate::Z_UP_1:
+            case Substate::Z_UP_2:
+                z_axis.set_position(ZMovement::TOP);
+                break;
+            case Substate::FINISHED:
+                state = State::IDLE;
+                break;
+            }
+            if (substate != Substate::FINISHED) {
+                // Move to next substate
+                substate = static_cast<Substate>(static_cast<uint8_t>(substate) + 1);
+            }
             break;
-        case CALIBRATION:
+        case State::IDLE:
+            // TODO
+        case State::CALIBRATION:
             // TODO
         default:
             break;

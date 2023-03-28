@@ -107,21 +107,22 @@ namespace subsys {
         XMovement x_axis;
         Gripper gripper;
 
-        enum State : uint8_t {
+        enum class State : uint8_t {
             IDLE,           // System is free; no slide is being held
-            PICK_SLIDE,     // System is on its way to pick up a slide; no slide is being held but current_slide is the slide the system is moving towards
-            MOVE_SLIDE,     // System has grabbed onto a slide and is moving it to a new location
-            WAIT,           // System is holding the slide and waiting (e.g. for the MeOH bath)
+            MOVE_SLIDE,     // System is moving a slide between two slots
             CALIBRATION,    // System is performing auto-calibration
         } state;
 
-        enum Substate : uint8_t {
-            INIT_SUBSTATE,
+        enum class Substate : uint8_t {
+            X_MOVE_1 = 0,
+            Z_DOWN_1,
             GRIPPER_CLOSE,
-            Z_MOVE_UP,
-            X_MOVE,
-            Z_MOVE_DOWN,
+            Z_UP_1,
+            X_MOVE_2,
+            Z_DOWN_2,
             GRIPPER_OPEN,
+            Z_UP_2,
+            FINISHED,
         } substate;
 
         std::vector<Slide> slides;

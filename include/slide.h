@@ -18,7 +18,7 @@ public:
     };
 
     /// @brief Current stage that the slide is in; each one corresponds to a different rack.
-    Stage stage;
+    Stage stage = QUEUE;
     /// @brief Which slot in the rack the slide is in.
     uint slot;
     /// @brief System time (ms) when the slide first started processing.
@@ -50,6 +50,10 @@ public:
     /// @return The horizontal location of the slot in mm.
     uint get_slot_position() const;
 
+    /// @brief Reset the timer on the current slide (sets stage_started to current time).
+    /// @param t System time in ms; if 0, will be recomputed.
+    void reset_timer(uint32_t t = 0);
+
     static constexpr uint STAGE_COUNT = Stage::READY + 1;
     /// @brief The length of each stage, in milliseconds.
     static constexpr uint32_t STAGE_LEN[STAGE_COUNT] = {
@@ -62,13 +66,13 @@ public:
         0       // READY
     };
 
-    /// @brief Number of slots available for each stage. 0 indicates that the gripper should not let go of the slide.
+    /// @brief Number of slots available for each stage.
     static constexpr uint SLOT_COUNTS[STAGE_COUNT] = {
         2,  // QUEUE
-        0,  // MEOH
+        1,  // MEOH
         2,  // MEOH_DRY
         2,  // STAIN
-        0,  // WASH
+        1,  // WASH
         2,  // READY
     };
 

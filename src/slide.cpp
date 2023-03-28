@@ -4,7 +4,7 @@
 
 bool Slide::slot_occupation[Slide::READY + 1][2] = {false};
 
-Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : stage(QUEUE), slot(slot) {
+Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : slot(slot) {
     if (!started || !stage_started) {
         uint32_t t = util::millis();
         this->started = started ? started : t;
@@ -50,4 +50,8 @@ bool Slide::move_to_next() {
 
 uint Slide::get_slot_position() const {
     return SLOT_POSITIONS[stage][slot];
+}
+
+void Slide::reset_timer(uint32_t t = 0) {
+    stage_started = t ? t : util::millis();
 }
