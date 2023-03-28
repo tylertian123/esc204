@@ -47,3 +47,7 @@ bool Slide::move_to_next() {
         return false;
     return move(static_cast<Slide::Stage>(stage + 1), new_slot);
 }
+
+uint Slide::get_slot_position() const {
+    return SLOT_POSITIONS[stage][slot];
+}

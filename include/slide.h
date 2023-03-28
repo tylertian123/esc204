@@ -46,6 +46,10 @@ public:
     /// @return True if move was successful
     bool move_to_next();
 
+    /// @brief Return the location of the slot that this slide is placed in.
+    /// @return The horizontal location of the slot in mm.
+    uint get_slot_position() const;
+
     static constexpr uint STAGE_COUNT = Stage::READY + 1;
     /// @brief The length of each stage, in milliseconds.
     static constexpr uint32_t STAGE_LEN[STAGE_COUNT] = {
