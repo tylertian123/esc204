@@ -91,8 +91,8 @@ public:
         {90, 100}, // READY
     };
 
-    /// @brief Current slot occupation; if a slot is occupied, it will be set to true.
-    static bool slot_occupation[STAGE_COUNT][2];
+    /// @brief Current slot occupation; if a slot is occupied, the pointer will point to the slide in that slot. Otherwise nullptr.
+    static Slide *slot_occupation[STAGE_COUNT][2];
 
     /// @brief Find the next available slot for the given stage.
     /// @param stage The stage to search

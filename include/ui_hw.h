@@ -25,7 +25,7 @@ namespace hw {
         bool held = false;
         uint32_t held_duration = 0;
 
-        Button(uint pin);
+        explicit Button(uint pin);
 
         /// @brief Update the state of the button
         /// @param t Current number of milliseconds since boot; will be computed if omitted

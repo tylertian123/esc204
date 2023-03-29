@@ -23,8 +23,8 @@ namespace pinmap {
     constexpr uint left = 18,
                    right = 17,
                    center = 16;
-    constexpr uint slide1 = 20,
-                   slide2 = 19;
+    constexpr uint slide0 = 20,
+                   slide1 = 19;
                    
 }
 

@@ -78,7 +78,7 @@ namespace subsys {
 
     double XMovement::set_position(double pos) {
         // Find how many steps is required and round to the nearest whole step
-        long steps = round((pos - position) / hwconf::x_mm_per_step);
+        auto steps = static_cast<long>(round((pos - position) / hwconf::x_mm_per_step));
         position += steps * hwconf::x_mm_per_step;
         stepper.step(steps);
         return position;
@@ -115,6 +115,35 @@ namespace subsys {
 
     void Control::run_once() {
         uint32_t time = util::millis();
+        // Handle system inputs first
+        for (uint i = 0; i < Slide::SLOT_COUNTS[Slide::QUEUE]; i ++) {
+            slide_sw[i].poll(time);
+            if (slide_sw[i].down) {
+                // Create the slide if not created already, after the switch has been held for a while
+                if (slide_sw[i].held && !Slide::slot_occupation[Slide::QUEUE][i]) {
+                    slides.emplace_back(i, time, time);
+                }
+            }
+            else {
+                slide_sw[i].held = false;
+                // If the switch is released but the slot is still occupied, remove the slide
+                // Normally, the slide will have been moved in software before it is physically moved
+                if (Slide::slot_occupation[Slide::QUEUE][i]) {
+                    for (auto it = slides.begin(); it != slides.end(); ++it) {
+                        // Find the slide in this slot and erase
+                        if (it->stage == Slide::QUEUE && it->slot == i) {
+                            // Clear current_slide pointer if needed
+                            if (current_slide == &*it) {
+                                current_slide = nullptr;
+                            }
+                            slides.erase(it);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         // Don't do anything if motors are currently moving
         if (z_axis.busy() || x_axis.busy() || gripper.busy(time)) {
             return;
@@ -127,21 +156,41 @@ namespace subsys {
         // Exits with the gripper opened, in the down position
         // Will move to the position of current_slide, pick it up, and move it to its next position
         case State::MOVE_SLIDE:
+            // Note, if a queued slide is being moved, there is a chance that current_slide = nullptr
+            // If the slide is removed
             switch (substate) {
             case Substate::X_MOVE_1:
             case Substate::X_MOVE_2:
+                // Directly exit if slide was removed
+                if (!current_slide) {
+                    substate = Substate::FINISHED;
+                    break;
+                }
                 x_axis.set_position(current_slide->get_slot_position());
                 break;
             case Substate::Z_DOWN_1:
             case Substate::Z_DOWN_2:
+                if (!current_slide) {
+                    substate = Substate::FINISHED;
+                    break;
+                }
                 z_axis.set_position(ZMovement::BOTTOM);
                 break;
             case Substate::GRIPPER_OPEN:
                 gripper = Gripper::OPEN;
+                // If slide removed, first open the gripper, then move to the next state
+                // The next state will bring the Z axis up
+                if (!current_slide) {
+                    break;
+                }
                 // Reset the slide timer once the slide is dropped off
                 current_slide->reset_timer(time);
                 break;
             case Substate::GRIPPER_CLOSE:
+                // If slide remved, don't close the gripper, and move to the next state to bring the Z axis up
+                if (!current_slide) {
+                    break;
+                }
                 gripper = Gripper::CLOSED;
                 // Change current_slide, so that the new slot position is correct
                 current_slide->move_to_next();
@@ -150,12 +199,15 @@ namespace subsys {
             case Substate::Z_UP_2:
                 z_axis.set_position(ZMovement::TOP);
                 break;
-            case Substate::FINISHED:
-                state = State::IDLE;
-                current_slide = nullptr;
+            default:
                 break;
             }
-            if (substate != Substate::FINISHED) {
+
+            if (substate == Substate::FINISHED) {
+                state = State::IDLE;
+                current_slide = nullptr;
+            }
+            else {
                 // Move to next substate
                 substate = static_cast<Substate>(static_cast<uint8_t>(substate) + 1);
             }

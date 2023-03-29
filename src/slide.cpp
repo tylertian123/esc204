@@ -4,7 +4,7 @@
 
 #include "util.h"
 
-bool Slide::slot_occupation[Slide::READY + 1][2] = {false};
+Slide *Slide::slot_occupation[Slide::READY + 1][2] = {nullptr};
 
 Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : slot(slot) {
     if (!started || !stage_started) {
@@ -13,13 +13,13 @@ Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : slot(slot) {
         this->stage_started = stage_started ? stage_started : t;
     }
 
-    slot_occupation[stage][slot] = true;
+    slot_occupation[stage][slot] = this;
 }
 
 bool Slide::move(Slide::Stage new_stage, uint new_slot) {
     if (!slot_occupation[new_stage][new_slot]) {
-        slot_occupation[new_stage][new_slot] = true;
-        slot_occupation[stage][slot] = false;
+        slot_occupation[new_stage][new_slot] = this;
+        slot_occupation[stage][slot] = nullptr;
         stage = new_stage;
         slot = new_slot;
         return true;

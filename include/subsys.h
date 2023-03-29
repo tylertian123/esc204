@@ -8,6 +8,7 @@
 #include "pinmap.h"
 #include "stepper.h"
 #include "servo.h"
+#include "ui_hw.h"
 
 // Note: Pin mappings and hardware config are defined in pinmap.h
 namespace subsys {
@@ -110,6 +111,11 @@ namespace subsys {
         ZMovement z_axis;
         XMovement x_axis;
         Gripper gripper;
+
+        hw::Button slide_sw[Slide::SLOT_COUNTS[Slide::QUEUE]] = {
+            hw::Button(pinmap::slide0),
+            hw::Button(pinmap::slide1),
+        };
 
         uint32_t last_calibrated = 0;
 
