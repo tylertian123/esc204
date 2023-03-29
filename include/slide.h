@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 
 #include <vector>
+#include <algorithm>
 
 class Slide {
 public:
@@ -54,6 +55,10 @@ public:
     /// @return The horizontal location of the slot in mm.
     uint get_slot_position() const;
 
+    /// @brief Lookup the stage name of the current stage.
+    /// @return The name of the current stage.
+    const char* get_stage_name() const;
+
     /// @brief Reset the timer on the current slide (sets stage_started to current time).
     /// @param t System time in ms; if 0, will be recomputed.
     void reset_timer(uint32_t t = 0);
@@ -70,6 +75,7 @@ public:
         0       // READY
     };
 
+    // TODO: Change me!
     /// @brief Number of slots available for each stage.
     static constexpr uint SLOT_COUNTS[STAGE_COUNT] = {
         2,  // QUEUE
@@ -77,22 +83,34 @@ public:
         2,  // MEOH_DRY
         2,  // STAIN
         1,  // WASH
-        2,  // READY
+        2,  // WASH_DRY
+        4,  // READY
     };
 
     // TODO: Change me!
     /// @brief Horizontal position (mm) of each slot.
-    static constexpr uint SLOT_POSITIONS[STAGE_COUNT][2] = {
+    static constexpr uint SLOT_POSITIONS[STAGE_COUNT][*std::max_element(SLOT_COUNTS, SLOT_COUNTS + STAGE_COUNT)] = {
         {10, 20},   // QUEUE
         {30},       // MEOH
         {40, 50},   // MEOH_DRY
         {60, 70},   // STAIN
-        {80},   // WASH
-        {90, 100}, // READY
+        {80},       // WASH
+        {90, 100},  // WASH_DRY
+        {110, 120, 130, 140},  // READY
+    };
+
+    static constexpr const char *STAGE_NAMES[STAGE_COUNT] = {
+        "Queue",
+        "MeOH",
+        "Dry 1",
+        "Stain",
+        "Wash",
+        "Dry 2",
+        "Ready",
     };
 
     /// @brief Current slot occupation; if a slot is occupied, the pointer will point to the slide in that slot. Otherwise nullptr.
-    static Slide *slot_occupation[STAGE_COUNT][2];
+    static Slide *slot_occupation[STAGE_COUNT][*std::max_element(SLOT_COUNTS, SLOT_COUNTS + STAGE_COUNT)];
 
     /// @brief Find the next available slot for the given stage.
     /// @param stage The stage to search

@@ -1,10 +1,11 @@
 #include "slide.h"
 
 #include <limits.h>
+#include <algorithm>
 
 #include "util.h"
 
-Slide *Slide::slot_occupation[Slide::READY + 1][2] = {nullptr};
+Slide *Slide::slot_occupation[Slide::READY + 1][*std::max_element(SLOT_COUNTS, SLOT_COUNTS + STAGE_COUNT)] = {nullptr};
 
 Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : slot(slot) {
     if (!started || !stage_started) {
@@ -62,6 +63,10 @@ bool Slide::can_move_to_next() const {
 
 uint Slide::get_slot_position() const {
     return SLOT_POSITIONS[stage][slot];
+}
+
+const char* Slide::get_stage_name() const {
+    return STAGE_NAMES[stage];
 }
 
 void Slide::reset_timer(uint32_t t) {
