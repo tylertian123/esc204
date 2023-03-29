@@ -111,7 +111,7 @@ namespace subsys {
     }
 
     bool Gripper::busy(uint32_t t) const {
-        return t ? t > busy_until : util::millis() > busy_until;
+        return t ? t < busy_until : util::millis() < busy_until;
     }
 
     void Control::run_once() {

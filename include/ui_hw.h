@@ -30,6 +30,8 @@ namespace hw {
         /// @brief Update the state of the button
         /// @param t Current number of milliseconds since boot; will be computed if omitted
         void poll(uint32_t t = 0);
+        /// @brief Equivalent to down.
+        operator bool() const;
     };
 
     class LED {
@@ -63,5 +65,10 @@ namespace hw {
         /// @brief Update the state of the LED.
         /// @param t Current number of milliseconds since boot; will be computed if omitted
         void poll(uint32_t t = 0);
+
+        /// @brief Equivalent to set().
+        /// @param state The new state of the LED
+        /// @return The new state
+        bool operator=(bool state);
     };
 }

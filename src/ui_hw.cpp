@@ -40,6 +40,10 @@ namespace hw {
         }
     }
 
+    Button::operator bool() const {
+        return down;
+    }
+
     LED::LED(uint pin, bool state) : pin(pin, GPIO_OUT) {
         set(state);
         last_change = util::millis();
@@ -85,5 +89,10 @@ namespace hw {
         else {
             last_change = t;
         }
+    }
+
+    bool LED::operator=(bool state) {
+        set(state);
+        return state;
     }
 }
