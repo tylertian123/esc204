@@ -136,7 +136,8 @@ namespace hw {
                     updated = true;
                     // If found, copy out the differing sequence and write to the display
                     char str_buf[17];
-                    strncpy(str_buf, &buf[row][col], end - col);
+                    strncpy(str_buf, buf[row] + col, end - col);
+                    str_buf[end - col] = '\0';
                     disp.goto_pos(col, row);
                     disp.print(str_buf);
                 }
