@@ -54,8 +54,12 @@ namespace subsys {
         }
     }
 
-    void ZMovement::calibrate_blocking() {
+    void ZMovement::calibrate() {
         set_position(CALIBRATION);
+    }
+
+    void ZMovement::calibrate_blocking() {
+        calibrate();
         while (busy())
             tight_loop_contents();
     }
@@ -80,11 +84,15 @@ namespace subsys {
         return position;
     }
 
-    void XMovement::calibrate_blocking() {
+    void XMovement::calibrate() {
         stepper.step(INT_MIN);
+        position = 0;
+    }
+
+    void XMovement::calibrate_blocking() {
+        calibrate();
         while (busy())
             tight_loop_contents();
-        position = 0;
     }
 
     Gripper::Gripper() {
@@ -176,12 +184,30 @@ namespace subsys {
             // If calibration period met, and the next slide that needs to be moved is more than 10s in the future, recalibrate
             if (time - last_calibrated > hwconf::calib_period && (!next || next->stage_time_remaining(time) > 10000)) {
                 state = State::CALIBRATION;
+                calib_substate = CalibrationSubstate::X;
                 break;
             }
             break;
         case State::CALIBRATION:
-            // TODO
-        default:
+            switch (calib_substate) {
+            case CalibrationSubstate::X:
+                x_axis.calibrate();
+                break;
+            case CalibrationSubstate::Z:
+                z_axis.calibrate();
+                break;
+            case CalibrationSubstate::RETURN:
+                z_axis.set_position(ZMovement::TOP);
+                break;
+            case CalibrationSubstate::FINISHED:
+                state = State::IDLE;
+                last_calibrated = time;
+                break;
+            }
+            if (calib_substate != CalibrationSubstate::FINISHED) {
+                // Move to next substate
+                calib_substate = static_cast<CalibrationSubstate>(static_cast<uint8_t>(calib_substate) + 1);
+            }
             break;
         }
     }

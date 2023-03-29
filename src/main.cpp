@@ -10,9 +10,7 @@
 
 hw::GPIO led(PICO_DEFAULT_LED_PIN, GPIO_OUT);
 
-subsys::ZMovement z_axis;
-subsys::XMovement x_axis;
-subsys::Gripper gripper;
+subsys::Control system;
 
 int main() {
 
@@ -20,24 +18,8 @@ int main() {
     bootsel_reset::attach_timer_check();
     ui::init();
 
-    ui::led.blink(200, hw::LED::INDEFINITE);
-    ui::disp.print("Calibrating...");
-
-    // Calibration procedure
-    ui::disp.goto_pos(0, 1);
-    ui::disp.print("X axis");
-    x_axis.calibrate_blocking();
-    ui::disp.goto_pos(0, 1);
-    ui::disp.print("Z axis");
-    z_axis.calibrate_blocking();
-    z_axis.set_position(subsys::ZMovement::TOP);
-    while (z_axis.busy())
-        tight_loop_contents();
-
     ui::led = true;
-    ui::disp.clear();
-    ui::disp.print("System Idle");
     while (true) {
-        tight_loop_contents();
+        system.run_once();
     }
 }

@@ -42,6 +42,8 @@ namespace subsys {
         /// @return The current position (or if the mechanism is moving, the position it's moving towards)
         Position get_position() const;
 
+        /// @brief Perform start-up calibration.
+        void calibrate();
         /// @brief Perform start-up calibration. Does not return until done.
         void calibrate_blocking();
     };
@@ -65,6 +67,8 @@ namespace subsys {
         /// @return The actual position that was set (this may be different from the desired position due to step rounding)
         double set_position(double pos);
 
+        /// @brief Perform start-up calibration.
+        void calibrate();
         /// @brief Perform start-up calibration. Does not return until done.
         void calibrate_blocking();
     };
@@ -113,7 +117,7 @@ namespace subsys {
             IDLE,           // System is free; no slide is being held
             MOVE_SLIDE,     // System is moving a slide between two slots
             CALIBRATION,    // System is performing auto-calibration
-        } state;
+        } state = State::CALIBRATION;
 
         enum class Substate : uint8_t {
             X_MOVE_1 = 0,
@@ -125,7 +129,14 @@ namespace subsys {
             GRIPPER_OPEN,
             Z_UP_2,
             FINISHED,
-        } substate;
+        } substate = Substate::X_MOVE_1;
+
+        enum class CalibrationSubstate : uint8_t {
+            X,
+            Z,
+            RETURN,
+            FINISHED,
+        } calib_substate = CalibrationSubstate::X;
 
         std::vector<Slide> slides;
         /// @brief Slide currently held by the gripper; nullptr if not holding anything.
