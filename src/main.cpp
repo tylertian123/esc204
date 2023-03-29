@@ -10,7 +10,7 @@
 
 hw::GPIO led(PICO_DEFAULT_LED_PIN, GPIO_OUT);
 
-subsys::Control system;
+subsys::Control sys;
 
 int main() {
 
@@ -20,6 +20,6 @@ int main() {
 
     ui::led = true;
     while (true) {
-        system.run_once();
+        sys.run_once();
     }
 }

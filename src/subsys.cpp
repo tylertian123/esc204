@@ -6,6 +6,7 @@
 #include "pinmap.h"
 #include "stepper.h"
 #include "util.h"
+#include "slide.h"
 
 namespace subsys {
     ZMovement::ZMovement() {
@@ -216,7 +217,7 @@ namespace subsys {
         // Search for any slides that need moving, and have an open slot to be moved into
         // If found, enter MOVE_SLIDE with that slide
         // If no slides need moving for the next while, and the system has not been calibrated in a while, enter CALIBRATION
-        case State::IDLE:
+        case State::IDLE: {
             Slide *next = nullptr;
             // Find a slide to move
             // Note newly inserted slides will always be at the end of the queue
@@ -240,6 +241,7 @@ namespace subsys {
                 break;
             }
             break;
+        }
         case State::CALIBRATION:
             switch (calib_substate) {
             case CalibrationSubstate::X:
