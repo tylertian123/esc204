@@ -37,14 +37,18 @@ public:
     /// @return True if move was successful (slot was empty)
     bool move(Stage new_stage, uint new_slot);
 
-    /// @brief Return whether the slide is done the current stage.
+    /// @brief Return the remaining time in the current stage in ms. Will be 0 or negative if the current stage is done.
     /// @param t System time in ms; if 0, will be recomputed
-    /// @return True if the slide should move to the next stage
-    bool done(uint32_t t = 0) const;
+    /// @return Signed time remaining in the current stage
+    int32_t stage_time_remaining(int32_t t = 0) const;
 
     /// @brief Change the position of this slide to the first open slot in the next stage.
     /// @return True if move was successful
     bool move_to_next();
+
+    /// @brief Check if there is a slot open in the next stage that the slide could be moved to.
+    /// @return True if move_to_next() will be successful
+    bool can_move_to_next() const;
 
     /// @brief Return the location of the slot that this slide is placed in.
     /// @return The horizontal location of the slot in mm.

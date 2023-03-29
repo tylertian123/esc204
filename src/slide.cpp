@@ -1,5 +1,7 @@
 #include "slide.h"
 
+#include <limits.h>
+
 #include "util.h"
 
 bool Slide::slot_occupation[Slide::READY + 1][2] = {false};
@@ -34,9 +36,15 @@ int Slide::find_empty_slot(Slide::Stage stage) {
     return -1;
 }
 
-bool Slide::done(uint32_t t) const {
+int32_t Slide::stage_time_remaining(int32_t t) const {
+    // Slides that are READY will never have a remaining time <= 0
+    if (stage == READY)
+        return INT_MAX;
+    // Slides in QUEUE always have a remaining time of 0
+    if (stage == QUEUE)
+        return 0;
     t = t ? t : util::millis();
-    return t - stage_started > STAGE_LEN[stage];
+    return STAGE_LEN[stage] + stage_started - t;
 }
 
 bool Slide::move_to_next() {
@@ -48,10 +56,14 @@ bool Slide::move_to_next() {
     return move(static_cast<Slide::Stage>(stage + 1), new_slot);
 }
 
+bool Slide::can_move_to_next() const {
+    return stage != READY && find_empty_slot(static_cast<Slide::Stage>(stage + 1)) != -1;
+}
+
 uint Slide::get_slot_position() const {
     return SLOT_POSITIONS[stage][slot];
 }
 
-void Slide::reset_timer(uint32_t t = 0) {
+void Slide::reset_timer(uint32_t t) {
     stage_started = t ? t : util::millis();
 }

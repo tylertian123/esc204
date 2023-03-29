@@ -107,6 +107,8 @@ namespace subsys {
         XMovement x_axis;
         Gripper gripper;
 
+        uint32_t last_calibrated = 0;
+
         enum class State : uint8_t {
             IDLE,           // System is free; no slide is being held
             MOVE_SLIDE,     // System is moving a slide between two slots

@@ -73,4 +73,8 @@ namespace hwconf {
     // TODO: Change me!
     /// @brief The amount of time (ms) the gripper takes to open or close.
     constexpr uint32_t gripper_change_duration = 1000;
+
+    // TODO: Change me!
+    /// @brief The minimum amount of time (ms) to wait before auto-calibrating again.
+    constexpr uint32_t calib_period = 180000;
 }
