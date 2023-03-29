@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pico/stdlib.h"
+#include "pi-pico-LCD/lcd_display.hpp"
 
 #include "gpio.h"
 
@@ -70,5 +71,28 @@ namespace hw {
         /// @param state The new state of the LED
         /// @return The new state
         bool operator=(bool state);
+    };
+
+    class BufferedLCD {
+    private:
+        char screen[2][16];
+        char buf[2][16];
+
+        LCDdisplay &disp;
+    public:
+        explicit BufferedLCD(LCDdisplay &disp);
+        
+        /// @brief Clear both the screen and the buffer.
+        void clear();
+        /// @brief Clear the buffer only.
+        void clear_buf();
+        /// @brief Write text to the buffer at the specified position.
+        /// @param str The text string; if this exceeds the length of the line, it will be cut off, not wrapped
+        /// @param col Column (x-coord) to start writing
+        /// @param row Row (y-coord) to start writing
+        void print(const char *str, uint8_t col = 0, uint8_t row = 0);
+        /// @brief Update the screen to match the buffer. Only the different characters will be updated.
+        /// @return Whether an update actually occurred (false if no-op).
+        bool update();
     };
 }

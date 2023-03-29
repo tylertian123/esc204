@@ -7,7 +7,8 @@
 namespace ui {
     extern hw::Button b_left, b_right, b_center;
     extern hw::LED led;
-    extern LCDdisplay disp;
+    extern LCDdisplay raw_disp;
+    extern hw::BufferedLCD disp;
 
     void init();
 }

@@ -1,5 +1,8 @@
 #include "ui_hw.h"
 
+#include "pi-pico-LCD/lcd_display.hpp"
+#include <string.h>
+
 #include "gpio.h"
 #include "util.h"
 
@@ -94,5 +97,53 @@ namespace hw {
     bool LED::operator=(bool state) {
         set(state);
         return state;
+    }
+
+    BufferedLCD::BufferedLCD(LCDdisplay &disp) : disp(disp) {
+        memset(screen, ' ', sizeof(screen));
+        memset(buf, ' ', sizeof(buf));
+    }
+
+    void BufferedLCD::clear_buf() {
+        memset(buf, ' ', sizeof(buf));
+    }
+
+    void BufferedLCD::clear() {
+        disp.clear();
+        memset(screen, ' ', sizeof(screen));
+        memset(buf, ' ', sizeof(buf));
+    }
+
+    void BufferedLCD::print(const char *str, uint8_t col, uint8_t row) {
+        for (uint i = 0; str[i]; i ++) {
+            // Once out of bounds, stop writing
+            if (col + i >= 16)
+                break;
+            buf[row][col + i] = str[i];
+        }
+    }
+
+    bool BufferedLCD::update() {
+        bool updated = false;
+        for (uint row = 0; row < 2; row ++) {
+            for (uint col = 0; col < 16; ) {
+                // Find longest differing subsequence
+                uint end;
+                for (end = col; end < 16 && screen[row][end] != buf[row][end]; end ++);
+                // col will be the start of the differing sequence (inclusive)
+                // end will be the end of the differing sequence (exclusive)
+                if (end > col) {
+                    updated = true;
+                    // If found, copy out the differing sequence and write to the display
+                    char str_buf[17];
+                    strncpy(str_buf, &buf[row][col], end - col);
+                    disp.goto_pos(col, row);
+                    disp.print(str_buf);
+                }
+                col = end + 1;
+            }
+        }
+        memcpy(screen, buf, sizeof(buf));
+        return updated;
     }
 }
