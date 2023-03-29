@@ -157,6 +157,7 @@ namespace subsys {
         // Exits with the gripper opened, in the down position
         // Will move to the position of current_slide, pick it up, and move it to its next position
         case State::MOVE_SLIDE:
+            substate = next_substate;
             // Note, if a queued slide is being moved, there is a chance that current_slide = nullptr
             // If the slide is removed
             switch (substate) {
@@ -210,7 +211,7 @@ namespace subsys {
             }
             else {
                 // Move to next substate
-                substate = static_cast<Substate>(static_cast<uint8_t>(substate) + 1);
+                next_substate = static_cast<Substate>(static_cast<uint8_t>(substate) + 1);
             }
             break;
         // Idle state
@@ -229,8 +230,9 @@ namespace subsys {
             }
             // If this slide needs to be moved, then move it
             if (next && next->stage_time_remaining(time) <= 0) {
-                substate = static_cast<Substate>(0);
                 state = State::MOVE_SLIDE;
+                substate = Substate::X_MOVE_1;
+                next_substate = Substate::X_MOVE_1;
                 current_slide = next;
                 break;
             }
@@ -238,11 +240,13 @@ namespace subsys {
             if (time - last_calibrated > hwconf::calib_period && (!next || next->stage_time_remaining(time) > 10000)) {
                 state = State::CALIBRATION;
                 calib_substate = CalibrationSubstate::X;
+                next_calib_substate = CalibrationSubstate::X;
                 break;
             }
             break;
         }
         case State::CALIBRATION:
+            calib_substate = next_calib_substate;
             switch (calib_substate) {
             case CalibrationSubstate::X:
                 x_axis.calibrate();
@@ -260,9 +264,11 @@ namespace subsys {
             }
             if (calib_substate != CalibrationSubstate::FINISHED) {
                 // Move to next substate
-                calib_substate = static_cast<CalibrationSubstate>(static_cast<uint8_t>(calib_substate) + 1);
+                next_calib_substate = static_cast<CalibrationSubstate>(static_cast<uint8_t>(calib_substate) + 1);
             }
             break;
         }
     }
+
+    Control control;
 }

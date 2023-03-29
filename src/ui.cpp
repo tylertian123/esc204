@@ -1,10 +1,12 @@
 #include "ui.h"
-#include "pinmap.h"
-#include "util.h"
 
 #include "pico/stdlib.h"
 #include "pico/time.h"
 #include "pi-pico-LCD/lcd_display.hpp"
+
+#include "pinmap.h"
+#include "util.h"
+#include "subsys.h"
 
 namespace ui {
     hw::Button b_left(pinmap::left), b_right(pinmap::right), b_center(pinmap::center);
@@ -20,8 +22,27 @@ namespace ui {
         led.poll(time);
     }
 
+    void update() {
+        using subsys::Control;
+        using subsys::control;
+        disp.clear_buf();
+        
+        if (control.state == Control::State::CALIBRATION) {
+            disp.print("Calibrating...");
+            if (control.calib_substate == Control::CalibrationSubstate::X) {
+                disp.print("X Axis", 0, 1);
+            }
+            else if (control.calib_substate == Control::CalibrationSubstate::Z) {
+                disp.print("Z Axis", 0, 1);
+            }
+        }
+
+        disp.update();
+    }
+
     void init() {
         raw_disp.init();
         disp.clear();
+        led = true;
     }
 }

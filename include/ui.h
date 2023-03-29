@@ -11,4 +11,6 @@ namespace ui {
     extern hw::BufferedLCD disp;
 
     void init();
+    void poll();
+    void update();
 }

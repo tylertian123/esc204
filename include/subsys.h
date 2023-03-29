@@ -123,7 +123,7 @@ namespace subsys {
             IDLE,           // System is free; no slide is being held
             MOVE_SLIDE,     // System is moving a slide between two slots
             CALIBRATION,    // System is performing auto-calibration
-        } state = State::CALIBRATION;
+        };
 
         enum class Substate : uint8_t {
             X_MOVE_1 = 0,
@@ -135,14 +135,20 @@ namespace subsys {
             GRIPPER_OPEN,
             Z_UP_2,
             FINISHED,
-        } substate = Substate::X_MOVE_1;
+        };
 
         enum class CalibrationSubstate : uint8_t {
             X,
             Z,
             RETURN,
             FINISHED,
-        } calib_substate = CalibrationSubstate::X;
+        };
+
+        State state = State::CALIBRATION;
+        Substate substate = Substate::X_MOVE_1;
+        Substate next_substate = Substate::X_MOVE_1;
+        CalibrationSubstate calib_substate = CalibrationSubstate::X;
+        CalibrationSubstate next_calib_substate = CalibrationSubstate::Z;
 
         std::vector<Slide> slides;
         /// @brief Slide currently held by the gripper; nullptr if not holding anything.
@@ -151,4 +157,6 @@ namespace subsys {
         /// @brief Run one cycle of the main slide stainer control algorithm.
         void run_once();
     };
+
+    extern Control control;
 }
