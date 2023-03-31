@@ -13,6 +13,10 @@ Slide::Slide(uint slot, uint32_t started, uint32_t stage_started) : slot(slot) {
         this->started = started ? started : t;
         this->stage_started = stage_started ? stage_started : t;
     }
+    else {
+        this->started = started;
+        this->stage_started = stage_started;
+    }
 
     slot_occupation[stage][slot] = this;
 }

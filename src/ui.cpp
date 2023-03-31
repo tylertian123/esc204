@@ -67,7 +67,7 @@ namespace ui {
                 snprintf(str, 17, "--:-- Rem: --:--");
             }
             else {
-                snprintf(str, 17, "%02d:%02d Rem: %02d:%20d", stage_time / 60, stage_time % 60, total_rem / 60, total_rem % 60);
+                snprintf(str, 17, "%02d:%02d Rem: %02d:%02d", stage_time / 60, stage_time % 60, total_rem / 60, total_rem % 60);
             }
             disp.print(str, 0, 1);
         }
