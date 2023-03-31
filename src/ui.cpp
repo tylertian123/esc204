@@ -63,9 +63,13 @@ namespace ui {
             uint stage_time = (time - slide.stage_started) / 1000;
             uint total_rem = slide.total_time_remaining(time) / 1000;
             // 00:00 Rem: 00:00
-            snprintf(str, 17, "%02d:%02d Rem: %02d:%20d", stage_time / 60, stage_time % 60, total_rem / 60, total_rem % 60);
+            if (slide.in_transit) {
+                snprintf(str, 17, "--:-- Rem: --:--");
+            }
+            else {
+                snprintf(str, 17, "%02d:%02d Rem: %02d:%20d", stage_time / 60, stage_time % 60, total_rem / 60, total_rem % 60);
+            }
             disp.print(str, 0, 1);
-            // TODO: add flag for in-transit slide
         }
 
         disp.update();

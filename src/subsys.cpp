@@ -187,6 +187,7 @@ namespace subsys {
                 }
                 // Reset the slide timer once the slide is dropped off
                 current_slide->reset_timer(time);
+                current_slide->in_transit = false;
                 break;
             case Substate::GRIPPER_CLOSE:
                 // If slide remved, don't close the gripper, and move to the next state to bring the Z axis up
@@ -196,6 +197,7 @@ namespace subsys {
                 gripper = Gripper::CLOSED;
                 // Change current_slide, so that the new slot position is correct
                 current_slide->move_to_next();
+                current_slide->in_transit = true;
                 break;
             case Substate::Z_UP_1:
             case Substate::Z_UP_2:

@@ -20,12 +20,15 @@ public:
 
     /// @brief Current stage that the slide is in; each one corresponds to a different rack.
     Stage stage = QUEUE;
-    /// @brief Which slot in the rack the slide is in.
+    /// @brief Which slot in the rack the slide is in. This is used by the UI display.
     uint slot;
     /// @brief System time (ms) when the slide first started processing.
     uint32_t started;
     /// @brief System time (ms) when the slide entered the current stage.
     uint32_t stage_started;
+    /// @brief Set to true when the slide is picked up.
+    bool in_transit = false;
+
     /// @brief Create a slide object in the specified slot.
     /// @param slot Slot of the slide
     /// @param started System time (ms) when the slide first started processing; if 0, will be computed
