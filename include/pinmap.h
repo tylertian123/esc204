@@ -13,6 +13,7 @@ namespace pinmap {
     constexpr uint x_clk = 6,
                    x_dir = 7,
                    x_lower_lim = 21;
+    constexpr uint stepper_enable = 15;
     constexpr uint gripper = 8;
     constexpr uint lcd_d7 = 9,
                    lcd_d6 = 10,

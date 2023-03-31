@@ -111,6 +111,9 @@ namespace subsys {
         ZMovement z_axis;
         XMovement x_axis;
         Gripper gripper;
+        
+        // NOTE: a logical high on this pin DISABLES the steppers
+        hw::GPIO stepper_enable{pinmap::stepper_enable, GPIO_OUT};
 
         hw::Button slide_sw[Slide::SLOT_COUNTS[Slide::QUEUE]] = {
             hw::Button(pinmap::slide0),

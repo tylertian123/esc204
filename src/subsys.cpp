@@ -222,6 +222,7 @@ namespace subsys {
         // If found, enter MOVE_SLIDE with that slide
         // If no slides need moving for the next while, and the system has not been calibrated in a while, enter CALIBRATION
         case State::IDLE: {
+            stepper_enable = true;
             Slide *next = nullptr;
             // Find a slide to move
             // Note newly inserted slides will always be at the end of the queue
@@ -237,14 +238,16 @@ namespace subsys {
                 substate = Substate::X_MOVE_1;
                 next_substate = Substate::X_MOVE_1;
                 current_slide = next;
-                break;
             }
             // If calibration period met, and the next slide that needs to be moved is more than 10s in the future, recalibrate
-            if (time - last_calibrated > hwconf::calib_period && (!next || next->stage_time_remaining(time) > 10000)) {
+            else if (time - last_calibrated > hwconf::calib_period && (!next || next->stage_time_remaining(time) > 10000)) {
                 state = State::CALIBRATION;
                 calib_substate = CalibrationSubstate::X;
                 next_calib_substate = CalibrationSubstate::X;
-                break;
+            }
+            // When switching out of idle, re-enable all steppers
+            if (state != State::IDLE) {
+                stepper_enable = false;
             }
             break;
         }
