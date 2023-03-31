@@ -138,6 +138,7 @@ namespace subsys {
                                 current_slide = nullptr;
                             }
                             slides.erase(it);
+                            Slide::slot_occupation[Slide::QUEUE][i] = nullptr;
                             break;
                         }
                     }
