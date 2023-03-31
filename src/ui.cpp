@@ -57,7 +57,7 @@ namespace ui {
             }
             const Slide &slide = control.slides[slide_index];
             char str[17];
-            snprintf(str, 17, "#%02d Stage: %s", slide_index, slide.get_stage_name());
+            snprintf(str, 17, "#%02d Stage: %s", slide_index + 1, slide.get_stage_name());
             disp.print(str);
             uint32_t time = util::millis();
             uint stage_time = (time - slide.stage_started) / 1000;

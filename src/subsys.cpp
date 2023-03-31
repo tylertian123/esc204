@@ -121,7 +121,7 @@ namespace subsys {
             slide_sw[i].poll(time);
             if (slide_sw[i].down) {
                 // Create the slide if not created already, after the switch has been held for a while
-                if (slide_sw[i].held && !Slide::slot_occupation[Slide::QUEUE][i]) {
+                if (slide_sw[i].held && state == State::IDLE && !Slide::slot_occupation[Slide::QUEUE][i]) {
                     slides.emplace_back(i, time, time);
                 }
             }
@@ -187,7 +187,7 @@ namespace subsys {
                     break;
                 }
                 // Reset the slide timer once the slide is dropped off
-                current_slide->reset_timer(time);
+                current_slide->reset_timer();
                 current_slide->in_transit = false;
                 break;
             case Substate::GRIPPER_CLOSE:
