@@ -43,6 +43,11 @@ public:
     /// @return Signed time remaining in the current stage
     int32_t stage_time_remaining(int32_t t = 0) const;
 
+    /// @brief Return the total remaining time in ms. Does not take into account time to transfer slides.
+    /// @param t System time in ms; if 0, will be recomputed
+    /// @return Total time remaining until slide is done
+    uint32_t total_time_remaining(int32_t t = 0) const;
+
     /// @brief Change the position of this slide to the first open slot in the next stage.
     /// @return True if move was successful
     bool move_to_next();

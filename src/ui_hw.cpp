@@ -7,9 +7,8 @@
 #include "util.h"
 
 namespace hw {
-    Button::Button(uint pin) : pin(pin, GPIO_IN, true, false) {
+    Button::Button(uint pin) : pin(pin, GPIO_IN, true, false), down(!pin) {
         last_change = util::millis();
-        down = !pin;
     }
 
     void Button::poll(uint32_t t) {
@@ -43,6 +42,11 @@ namespace hw {
         }
     }
 
+    void Button::clear_all() {
+        pressed = false;
+        held = false;
+    }
+
     Button::operator bool() const {
         return down;
     }
@@ -58,7 +62,7 @@ namespace hw {
         pin = state;
     }
 
-    bool LED::blinking() {
+    bool LED::blinking() const {
         return blink_duration;
     }
 

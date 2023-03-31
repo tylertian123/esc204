@@ -24,6 +24,7 @@ namespace hw {
         bool pressed = false;
         /// @brief Set to true once after the button has been held down (but before release); needs to be cleared
         bool held = false;
+        /// @brief The duration that the button has been held down. Updated automatically; no need to clear.
         uint32_t held_duration = 0;
 
         explicit Button(uint pin);
@@ -31,6 +32,8 @@ namespace hw {
         /// @brief Update the state of the button
         /// @param t Current number of milliseconds since boot; will be computed if omitted
         void poll(uint32_t t = 0);
+        /// @brief Clear all flags (pressed and held).
+        void clear_all();
         /// @brief Equivalent to down.
         operator bool() const;
     };
@@ -58,7 +61,7 @@ namespace hw {
         void set(bool state);
         /// @brief Return whether the LED is currently blinking.
         /// @return True if the LED is blinking
-        bool blinking();
+        bool blinking() const;
         /// @brief Make the LED blink (asynchronously).
         /// @param duration Duration in milliseconds between switching of on/off
         /// @param times The number of times to blink; INDEFINITE to blink forever

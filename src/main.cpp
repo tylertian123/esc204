@@ -18,5 +18,7 @@ int main() {
         ui::poll();
         ui::update();
         subsys::control.run_once();
+        // 100 Hz is more than sufficient
+        sleep_ms(10);
     }
 }

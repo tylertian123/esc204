@@ -48,6 +48,14 @@ int32_t Slide::stage_time_remaining(int32_t t) const {
     return STAGE_LEN[stage] + stage_started - t;
 }
 
+uint32_t Slide::total_time_remaining(int32_t t) const {
+    uint32_t rem = std::max(stage_time_remaining(t), static_cast<int32_t>(0));
+    for (uint8_t s = stage + 1; s < STAGE_COUNT; s ++) {
+        rem += STAGE_LEN[s];
+    }
+    return rem;
+}
+
 bool Slide::move_to_next() {
     if (stage == READY)
         return false;
