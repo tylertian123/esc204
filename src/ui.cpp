@@ -66,6 +66,9 @@ namespace ui {
             if (slide.in_transit) {
                 snprintf(str, 17, "--:-- Rem: --:--");
             }
+            else if (slide.stage == Slide::READY) {
+                snprintf(str, 17, "%02d:%02d Rem: --:--", stage_time / 60, stage_time % 60);
+            }
             else {
                 snprintf(str, 17, "%02d:%02d Rem: %02d:%02d", stage_time / 60, stage_time % 60, total_rem / 60, total_rem % 60);
             }
