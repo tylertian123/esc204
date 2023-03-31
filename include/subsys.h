@@ -148,7 +148,7 @@ namespace subsys {
         Substate substate = Substate::X_MOVE_1;
         Substate next_substate = Substate::X_MOVE_1;
         CalibrationSubstate calib_substate = CalibrationSubstate::X;
-        CalibrationSubstate next_calib_substate = CalibrationSubstate::Z;
+        CalibrationSubstate next_calib_substate = CalibrationSubstate::X;
 
         std::vector<Slide> slides;
         /// @brief Slide currently held by the gripper; nullptr if not holding anything.
