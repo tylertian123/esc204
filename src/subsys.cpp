@@ -65,6 +65,16 @@ namespace subsys {
             tight_loop_contents();
     }
 
+    void ZMovement::pause() {
+        left_stepper.pause();
+        right_stepper.pause();
+    }
+
+    void ZMovement::resume() {
+        left_stepper.resume();
+        right_stepper.resume();
+    }
+
     XMovement::XMovement() {
         stepper.add_lower_lim_sw(pinmap::x_lower_lim);
     }
@@ -96,6 +106,14 @@ namespace subsys {
             tight_loop_contents();
     }
 
+    void XMovement::pause() {
+        stepper.pause();
+    }
+
+    void XMovement::resume() {
+        stepper.resume();
+    }
+
     Gripper::Gripper() {
         set(OPEN);
     }
@@ -114,11 +132,39 @@ namespace subsys {
         return t ? t < busy_until : util::millis() < busy_until;
     }
 
+    Control::Control() {
+        // Set changed flag to true to do a check on startup
+        safety_sw.changed = true;
+    }
+
     void Control::run_once() {
         uint32_t time = util::millis();
-        // Handle system inputs first
+
+        // First poll all buttons
+        safety_sw.poll();
         for (uint i = 0; i < Slide::SLOT_COUNTS[Slide::QUEUE]; i ++) {
             slide_sw[i].poll(time);
+        }
+
+        // Handle safety switch
+        if (safety_sw.changed) {
+            safety_sw.changed = false;
+            // Pause everything if safety switch is not down
+            if (!safety_sw.down) {
+                z_axis.pause();
+                x_axis.pause();
+                stepper_enable = true;
+                return;
+            }
+            else {
+                z_axis.resume();
+                x_axis.resume();
+                stepper_enable = false;
+            }
+        }
+
+        // Handle system inputs
+        for (uint i = 0; i < Slide::SLOT_COUNTS[Slide::QUEUE]; i ++) {
             if (slide_sw[i].down) {
                 // Create the slide if not created already, after the switch has been held for a while
                 if (slide_sw[i].held && state == State::IDLE && !Slide::slot_occupation[Slide::QUEUE][i]) {

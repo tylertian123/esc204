@@ -24,6 +24,8 @@ namespace hw {
         bool pressed = false;
         /// @brief Set to true once after the button has been held down (but before release); needs to be cleared
         bool held = false;
+        /// @brief Set to true once when the state (up/down) is changed; needs to be cleared
+        bool changed = false;
         /// @brief The duration that the button has been held down. Updated automatically; no need to clear.
         uint32_t held_duration = 0;
 

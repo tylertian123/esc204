@@ -55,7 +55,7 @@ namespace hw {
 
     void A4988::pwm_wrap_cb() {
         if (steps_left > 0) {
-            if (steps_left != UINT_MAX)
+            if (steps_left != UINT_MAX && !paused)
                 steps_left --;
             if (!steps_left || (has_upper_lim && direction && !upper_lim_sw) || (has_lower_lim && !direction && !lower_lim_sw)) {
                 steps_left = 0;
@@ -94,6 +94,18 @@ namespace hw {
             step(UINT_MAX, false);
         else
             step(num > 0 ? num : -num, num > 0);
+    }
+
+    void A4988::pause() {
+        pwm_set_chan_level(slice, channel, 0);
+        paused = true;
+    }
+
+    void A4988::resume() {
+        if (paused) {
+            paused = false;
+            step(steps_left, direction);
+        }
     }
 
     void A4988::stop() {

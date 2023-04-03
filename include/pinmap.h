@@ -26,6 +26,7 @@ namespace pinmap {
                    center = 16;
     constexpr uint slide0 = 20,
                    slide1 = 19;
+    constexpr uint safety = 27;
                    
 }
 

@@ -47,6 +47,10 @@ namespace subsys {
         void calibrate();
         /// @brief Perform start-up calibration. Does not return until done.
         void calibrate_blocking();
+        /// @brief Pause steppers.
+        void pause();
+        /// @brief Resume steppers.
+        void resume();
     };
 
     class XMovement {
@@ -72,6 +76,10 @@ namespace subsys {
         void calibrate();
         /// @brief Perform start-up calibration. Does not return until done.
         void calibrate_blocking();
+        /// @brief Pause steppers.
+        void pause();
+        /// @brief Resume steppers.
+        void resume();
     };
 
     class Gripper {
@@ -114,6 +122,7 @@ namespace subsys {
         
         // NOTE: a logical high on this pin DISABLES the steppers
         hw::GPIO stepper_enable{pinmap::stepper_enable, GPIO_OUT};
+        hw::Button safety_sw{pinmap::safety};
 
         hw::Button slide_sw[Slide::SLOT_COUNTS[Slide::QUEUE]] = {
             hw::Button(pinmap::slide0),
@@ -156,6 +165,8 @@ namespace subsys {
         std::vector<Slide> slides;
         /// @brief Slide currently held by the gripper; nullptr if not holding anything.
         Slide *current_slide = nullptr;
+
+        Control();
 
         /// @brief Run one cycle of the main slide stainer control algorithm.
         void run_once();

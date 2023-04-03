@@ -13,6 +13,7 @@ namespace hw {
         uint16_t duty_cycle = 0;
         bool direction = false;
         bool inverted = false;
+        bool paused = false;
         uint steps_left = 0;
 
         // Uninitialized by default
@@ -65,6 +66,10 @@ namespace hw {
         void step(int num);
         /// @brief Stop the movement completely
         void stop();
+        /// @brief Stop the movement completely, without clearing the step counter.
+        void pause();
+        /// @brief Resume stepping after pause.
+        void resume();
         /// @brief Return whether the stepper is done moving the specified number of steps
         /// @return True if the stepper is idle.
         bool done() const;

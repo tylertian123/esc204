@@ -37,6 +37,7 @@ namespace hw {
                     held_duration = 0;
                 }
                 down = state;
+                changed = true;
                 last_change = t;
             }
         }
@@ -45,6 +46,7 @@ namespace hw {
     void Button::clear_all() {
         pressed = false;
         held = false;
+        changed = false;
     }
 
     Button::operator bool() const {

@@ -31,7 +31,11 @@ namespace ui {
         using subsys::control;
         disp.clear_buf();
         
-        if (control.state == Control::State::CALIBRATION) {
+        if (!control.safety_sw.down) {
+            disp.print("Paused");
+            disp.print("Please Close Lid", 0, 1);
+        }
+        else if (control.state == Control::State::CALIBRATION) {
             disp.print("Calibrating...");
             if (control.calib_substate == Control::CalibrationSubstate::X) {
                 disp.print("X Axis", 0, 1);
