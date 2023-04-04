@@ -7,6 +7,7 @@
 #include "stepper.h"
 #include "util.h"
 #include "slide.h"
+#include "ui.h"
 
 namespace subsys {
     ZMovement::ZMovement() {
@@ -320,6 +321,75 @@ namespace subsys {
             }
             break;
         }
+    }
+
+    void Control::test_z_blocking(uint cycles) {
+        ui::disp.clear_buf();
+        ui::disp.print("Calibrating");
+        ui::disp.update();
+        z_axis.calibrate_blocking();
+
+        for (uint i = 0; i < cycles; i ++) {
+            char buf[17];
+            snprintf(buf, 17, "%d, rem: %d", i, cycles - i);
+            ui::disp.clear_buf();
+            ui::disp.print("Running cycle");
+            ui::disp.print(buf, 0, 1);
+            ui::disp.update();
+            z_axis.set_position(ZMovement::TOP);
+            while (z_axis.busy())
+                tight_loop_contents();
+            z_axis.set_position(ZMovement::BOTTOM);
+            while (z_axis.busy())
+                tight_loop_contents();
+        }
+        ui::disp.clear_buf();
+        ui::disp.print("Done");
+        ui::disp.update();
+    }
+
+    void Control::test_x_blocking(uint cycles, double low_pos, double high_pos) {
+        ui::disp.clear_buf();
+        ui::disp.print("Calibrating");
+        ui::disp.update();
+        x_axis.calibrate_blocking();
+
+        for (uint i = 0; i < cycles; i ++) {
+            char buf[17];
+            snprintf(buf, 17, "%d, rem: %d", i, cycles - i);
+            ui::disp.clear_buf();
+            ui::disp.print("Running cycle");
+            ui::disp.print(buf, 0, 1);
+            ui::disp.update();
+            x_axis.set_position(high_pos);
+            while (x_axis.busy())
+                tight_loop_contents();
+            x_axis.set_position(low_pos);
+            while (x_axis.busy())
+                tight_loop_contents();
+        }
+        ui::disp.clear_buf();
+        ui::disp.print("Done");
+        ui::disp.update();
+    }
+
+    void Control::test_gripper_blocking(uint cycles) {
+        for (uint i = 0; i < cycles; i ++) {
+            char buf[17];
+            snprintf(buf, 17, "%d, rem: %d", i, cycles - i);
+            ui::disp.clear_buf();
+            ui::disp.print("Running cycle");
+            ui::disp.print(buf, 0, 1);
+            ui::disp.update();
+
+            gripper = Gripper::OPEN;
+            sleep_ms(hwconf::gripper_change_duration);
+            gripper = Gripper::CLOSED;
+            sleep_ms(hwconf::gripper_change_duration);
+        }
+        ui::disp.clear_buf();
+        ui::disp.print("Done");
+        ui::disp.update();
     }
 
     Control control;

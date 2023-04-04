@@ -170,6 +170,10 @@ namespace subsys {
 
         /// @brief Run one cycle of the main slide stainer control algorithm.
         void run_once();
+
+        void test_z_blocking(uint cycles);
+        void test_x_blocking(uint cycles, double low_pos, double high_pos);
+        void test_gripper_blocking(uint cycles);
     };
 
     extern Control control;
