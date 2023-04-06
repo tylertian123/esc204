@@ -72,14 +72,15 @@ public:
     void reset_timer(uint32_t t = 0);
 
     static constexpr uint STAGE_COUNT = Stage::READY + 1;
+    // NOTE: These were updated for testing/demonstration.
     /// @brief The length of each stage, in milliseconds.
     static constexpr uint32_t STAGE_LEN[STAGE_COUNT] = {
         0,      // QUEUE
         5000,   // MEOH (5s)
-        30000,  // MEOH_DRY (30s)
-        900000, // STAIN (15min)
+        10000,  // MEOH_DRY (10s)
+        30000, // STAIN (30s)
         10000,  // WASH (10s)
-        60000,  // WASH_DRY (60s)
+        10000,  // WASH_DRY (10s)
         0       // READY
     };
 
