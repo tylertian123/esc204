@@ -84,7 +84,7 @@ namespace subsys {
 
     class Gripper {
     private:
-        hw::Servo servo{pinmap::gripper, hwconf::gripper_period, hwconf::gripper_min_pulse, hwconf::gripper_max_pulse, hwconf::gripper_range};
+        hw::Servo servo{pinmap::gripper, hwconf::gripper_period, hwconf::gripper_min_pulse, hwconf::gripper_max_pulse, 180};
         uint32_t busy_until = 0;
 
     public:

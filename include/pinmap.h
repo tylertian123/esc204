@@ -12,7 +12,7 @@ namespace pinmap {
                    z2_lower_lim = 26;
     constexpr uint x_clk = 6,
                    x_dir = 7,
-                   x_lower_lim = 21;
+                   x_upper_lim = 21;
     constexpr uint stepper_enable = 15;
     constexpr uint gripper = 8;
     constexpr uint lcd_d7 = 9,
@@ -47,8 +47,9 @@ namespace hwconf {
     /// @brief Amount of vertical travel (mm) per step in the z axis.
     constexpr double z_mm_per_step = 8.0 / 200.0;
     // Whether to invert the directions of the axes
-    constexpr bool z1_inverted = true,
-                   z2_inverted = true,
+    // NOTE: On the prototype the exposed metal side of the dupont connector should face outwards
+    constexpr bool z1_inverted = false,
+                   z2_inverted = false,
                    x_inverted = false;
     // TODO: Change me!
     /// @brief Distance (mm) from calibration of the lowered/raised z position.
@@ -62,16 +63,17 @@ namespace hwconf {
     // TODO: Change me!
     /// @brief Amount of horizontal travel (mm) per step in the x axis.
     constexpr double x_mm_per_step = 0.5;
+    // TODO: Change me!
+    /// @brief Horizontal position (mm) of the x carriage when it hits the calibration switch.
+    constexpr double x_cal_pos = 180;
 
     /// @brief PWM period, min pulse, and max pulse of the gripper.
     constexpr uint16_t gripper_period = 20000,
                        gripper_min_pulse = 500,
                        gripper_max_pulse = 2500;
-    // TODO: Change me!
-    /// @brief Total range and angle in the open/closed positions for the gripper.
-    constexpr uint gripper_range = 180,
-                   gripper_open = 0,
-                   gripper_closed = 90;
+    /// @brief Pulse width (us) of the open and closed positions of the gripper servo.
+    constexpr uint16_t gripper_open = 1000,
+                       gripper_closed = 1200;
     // TODO: Change me!
     /// @brief The amount of time (ms) the gripper takes to open or close.
     constexpr uint32_t gripper_change_duration = 1000;
