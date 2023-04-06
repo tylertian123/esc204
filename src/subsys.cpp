@@ -76,7 +76,7 @@ namespace subsys {
     }
 
     XMovement::XMovement() {
-        stepper.add_lower_lim_sw(pinmap::x_lower_lim);
+        stepper.add_upper_lim_sw(pinmap::x_upper_lim);
     }
 
     bool XMovement::busy() const {
@@ -96,8 +96,8 @@ namespace subsys {
     }
 
     void XMovement::calibrate() {
-        stepper.step(INT_MIN);
-        position = 0;
+        stepper.step(INT_MAX);
+        position = hwconf::x_cal_pos;
     }
 
     void XMovement::calibrate_blocking() {
@@ -119,7 +119,7 @@ namespace subsys {
     }
 
     void Gripper::set(Gripper::State state) {
-        servo = state ? hwconf::gripper_open : hwconf::gripper_closed;
+        servo.set_output(state == OPEN ? hwconf::gripper_open : hwconf::gripper_closed);
         busy_until = util::millis() + hwconf::gripper_change_duration;
     }
 
