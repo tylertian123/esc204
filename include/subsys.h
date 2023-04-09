@@ -56,7 +56,7 @@ namespace subsys {
     class XMovement {
     private:
         hw::A4988 stepper{pinmap::x_clk, pinmap::x_dir, hwconf::x_freq, hwconf::x_duty, hwconf::x_inverted};
-        double position = NAN;
+        float position = NAN;
     
     public:
         XMovement();
@@ -66,11 +66,11 @@ namespace subsys {
         bool busy() const;
         /// @brief Get the position that the mechanism is in, or is moving towards. NaN if uncalibrated.
         /// @return The current position in mm (or if the mechanism is moving, the position it's moving towards)
-        double get_position() const;
+        float get_position() const;
         /// @brief Set the desired position of the X movement mechanism. Note this will be rounded to the nearest step.
         /// @param pos The desired position
         /// @return The actual position that was set (this may be different from the desired position due to step rounding)
-        double set_position(double pos);
+        float set_position(float pos);
 
         /// @brief Perform start-up calibration.
         void calibrate();

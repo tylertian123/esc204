@@ -45,7 +45,7 @@ namespace hwconf {
     /// @brief Duty cycle (out of 255) of x stepper.
     constexpr uint8_t x_duty = 70;
     /// @brief Amount of vertical travel (mm) per step in the z axis.
-    constexpr double z_mm_per_step = 8.0 / 200.0;
+    constexpr float z_mm_per_step = 8.0 / 200.0;
     // Whether to invert the directions of the axes
     // NOTE: On the prototype the exposed metal side of the dupont connector should face outwards
     constexpr bool z1_inverted = false,
@@ -53,7 +53,7 @@ namespace hwconf {
                    x_inverted = false;
     // TODO: Change me!
     /// @brief Distance (mm) from calibration of the lowered/raised z position.
-    constexpr double z_lower_pos_mm = 20.0,
+    constexpr float z_lower_pos_mm = 20.0,
                      z_upper_pos_mm = 120.0;
     /// @brief Number of steps (from calibration position) to reach the lowered/raised z position.
     constexpr uint z_lower_pos_steps = static_cast<uint>(z_lower_pos_mm / z_mm_per_step),
@@ -62,10 +62,10 @@ namespace hwconf {
 
     // TODO: Change me!
     /// @brief Amount of horizontal travel (mm) per step in the x axis.
-    constexpr double x_mm_per_step = 0.5;
+    constexpr float x_mm_per_step = 0.5;
     // TODO: Change me!
     /// @brief Horizontal position (mm) of the x carriage when it hits the calibration switch.
-    constexpr double x_cal_pos = 180;
+    constexpr float x_cal_pos = 180;
 
     /// @brief PWM period, min pulse, and max pulse of the gripper.
     constexpr uint16_t gripper_period = 20000,

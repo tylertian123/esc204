@@ -73,7 +73,7 @@ bool Slide::can_move_to_next() const {
     return stage != READY && find_empty_slot(static_cast<Slide::Stage>(stage + 1)) != -1;
 }
 
-uint Slide::get_slot_position() const {
+float Slide::get_slot_position() const {
     return SLOT_POSITIONS[stage][slot];
 }
 
