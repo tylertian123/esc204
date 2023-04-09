@@ -5,10 +5,12 @@
 #include <vector>
 #include <algorithm>
 
-class Slide {
+class Slide
+{
 public:
     /// @brief Current stage that the slide is in; each one corresponds to a different rack.
-    enum Stage : uint {
+    enum Stage : uint
+    {
         QUEUE,
         MEOH,
         MEOH_DRY,
@@ -61,11 +63,11 @@ public:
 
     /// @brief Return the location of the slot that this slide is placed in.
     /// @return The horizontal location of the slot in mm.
-    uint get_slot_position() const;
+    float get_slot_position() const;
 
     /// @brief Lookup the stage name of the current stage.
     /// @return The name of the current stage.
-    const char* get_stage_name() const;
+    const char *get_stage_name() const;
 
     /// @brief Reset the timer on the current slide (sets stage_started to current time).
     /// @param t System time in ms; if 0, will be recomputed.
@@ -87,25 +89,25 @@ public:
     // TODO: Change me!
     /// @brief Number of slots available for each stage.
     static constexpr uint SLOT_COUNTS[STAGE_COUNT] = {
-        2,  // QUEUE
-        1,  // MEOH
-        2,  // MEOH_DRY
-        2,  // STAIN
-        1,  // WASH
-        2,  // WASH_DRY
-        4,  // READY
+        2, // QUEUE
+        1, // MEOH
+        2, // MEOH_DRY
+        2, // STAIN
+        1, // WASH
+        2, // WASH_DRY
+        4, // READY
     };
 
     // TODO: Change me!
     /// @brief Horizontal position (mm) of each slot.
-    static constexpr uint SLOT_POSITIONS[STAGE_COUNT][*std::max_element(SLOT_COUNTS, SLOT_COUNTS + STAGE_COUNT)] = {
-        {10, 20},   // QUEUE
-        {30},       // MEOH
-        {40, 50},   // MEOH_DRY
-        {60, 70},   // STAIN
-        {80},       // WASH
-        {90, 100},  // WASH_DRY
-        {110, 120, 130, 140},  // READY
+    static constexpr float SLOT_POSITIONS[STAGE_COUNT][*std::max_element(SLOT_COUNTS, SLOT_COUNTS + STAGE_COUNT)] = {
+        {10.0, 20.0},             // QUEUE
+        {30.0},                 // MEOH
+        {40.0, 50.0},             // MEOH_DRY
+        {60.0, 70.0},             // STAIN
+        {80.0},                 // WASH
+        {90.0, 100.0},            // WASH_DRY
+        {110.0, 120.0, 130.0, 140.0}, // READY
     };
 
     static constexpr const char *STAGE_NAMES[STAGE_COUNT] = {

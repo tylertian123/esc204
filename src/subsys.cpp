@@ -84,11 +84,11 @@ namespace subsys {
         return !stepper.done();
     }
 
-    double XMovement::get_position() const {
+    float XMovement::get_position() const {
         return position;
     }
 
-    double XMovement::set_position(double pos) {
+    float XMovement::set_position(float pos) {
         // Find how many steps is required and round to the nearest whole step
         auto steps = static_cast<long>(round((pos - position) / hwconf::x_mm_per_step));
         position += steps * hwconf::x_mm_per_step;
