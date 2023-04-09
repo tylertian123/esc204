@@ -62,7 +62,7 @@ namespace hwconf {
 
     // TODO: Change me!
     /// @brief Amount of horizontal travel (mm) per step in the x axis.
-    constexpr float x_mm_per_step = 0.5;
+    constexpr float x_mm_per_step = 26.042 * 3.14159265 / 200;
     // TODO: Change me!
     /// @brief Horizontal position (mm) of the x carriage when it hits the calibration switch.
     constexpr float x_cal_pos = 180;
@@ -72,11 +72,11 @@ namespace hwconf {
                        gripper_min_pulse = 500,
                        gripper_max_pulse = 2500;
     /// @brief Pulse width (us) of the open and closed positions of the gripper servo.
-    constexpr uint16_t gripper_open = 1800,
+    constexpr uint16_t gripper_open = 1850,
                        gripper_closed = 1750;
     // TODO: Change me!
     /// @brief The amount of time (ms) the gripper takes to open or close.
-    constexpr uint32_t gripper_change_duration = 1000;
+    constexpr uint32_t gripper_change_duration = 250;
 
     // TODO: Change me!
     /// @brief The minimum amount of time (ms) to wait before auto-calibrating again.

@@ -52,6 +52,7 @@ void test_z(uint cycles) {
         while (subsys::control.z_axis.busy())
             tight_loop_contents();
     }
+    subsys::control.z_axis.set_position(subsys::ZMovement::TOP);
     ui::disp.clear_buf();
     ui::disp.print("Done");
     ui::disp.update();
@@ -107,7 +108,7 @@ int main() {
     bootsel_reset::attach_timer_check();
     ui::init();
 
-    test_gripper_toggle();
+    test_gripper(100);
     while (true) {
         tight_loop_contents();
     }
