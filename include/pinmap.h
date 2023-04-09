@@ -72,8 +72,8 @@ namespace hwconf {
                        gripper_min_pulse = 500,
                        gripper_max_pulse = 2500;
     /// @brief Pulse width (us) of the open and closed positions of the gripper servo.
-    constexpr uint16_t gripper_open = 1000,
-                       gripper_closed = 1200;
+    constexpr uint16_t gripper_open = 1800,
+                       gripper_closed = 1750;
     // TODO: Change me!
     /// @brief The amount of time (ms) the gripper takes to open or close.
     constexpr uint32_t gripper_change_duration = 1000;
